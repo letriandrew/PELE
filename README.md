@@ -1,4 +1,4 @@
-# PELE aka Protégé Effect Learning Entity
+# PELE
 PELE aka the Protégé Effect Learning Entity is an application to assist in learning by invoking the Protégé Effect.
 
 ## What is the the Protégé Effect?
