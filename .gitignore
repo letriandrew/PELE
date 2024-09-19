@@ -1,0 +1,50 @@
+# Ignore macOS system files
+.DS_Store
+
+# Ignore node_modules
+node_modules/
+
+# Ignore log files and temp files
+*.log
+*.tmp
+
+# Ignore IDE or editor specific files
+.vscode/
+.idea/
+*.swp
+
+# Ignore cache files
+.cache/
+*.cache
+*.bak
+
+# Ignore build output directories
+dist/
+build/
+
+# Ignore environment variables and credentials
+.env
+.env.local
+.env.*.local
+
+# Ignore generated directories and files
+coverage/
+out/
+tmp/
+*.lock
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore package managers' lockfiles
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Ignore generated assets
+*.min.*
+*.map
+
+# Ignore operating system files
+Thumbs.db
