@@ -191,6 +191,7 @@ const Record = () => {
           <Box sx={{ position: 'absolute', bottom: 40 }}>
             <Button
               variant="contained"
+              disabled={seconds === 0}
               onClick={handleGenerate}
               sx={{
                 opacity: 0.5,

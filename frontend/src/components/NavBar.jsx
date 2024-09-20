@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
-const pages = [['Record!','/record'],['User Manual','/userManual'],['About Us','/aboutUs']];
+const pages = [['Record!', '/record'], ['User Manual', '/userManual'], ['About Us', '/aboutUs']];
 const settings = ['Account', 'Dashboard', 'Logout'];
 
 function NavBar() {
@@ -36,7 +36,13 @@ function NavBar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ bgcolor: "#933535"}}>
+    <AppBar position="fixed"  sx={{ 
+        background: "linear-gradient(90deg, #7f99ff 0%, #d63b3b 100%)", // Linear gradient, 
+        marginTop: 4, 
+        mx: 2, // Adds margin to the left and right
+        borderRadius: 10, // Adjusts the roundness of the corners
+        width: `calc(100% - 32px)`, // Ensures it fits the container minus the horizontal margins
+      }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AutoStoriesIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -120,7 +126,7 @@ function NavBar() {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block', paddingLeft: '25px', paddingRight: '25px' }}
               >
-                <Typography fontWeight={700} sx={{letterSpacing: '0.1rem'}}>{page[0]}</Typography>
+                <Typography fontWeight={700} sx={{ letterSpacing: '0.1rem' }}>{page[0]}</Typography>
               </Button>
             ))}
           </Box>
