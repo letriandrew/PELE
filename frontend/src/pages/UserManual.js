@@ -16,16 +16,16 @@ const UserManual = () => {
   return (
     <>
       <CssBaseline />
-      <Box sx={{ 
+      <Box sx={{
         position: 'absolute',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)', // Center horizontally and vertically
         opacity: loaded ? 0 : 1, // Control visibility with opacity
-          transition: 'opacity 8s ease-in-out', // Smooth transition for fade-in
-        }}>
-      <CircularProgress />
-        </Box>
+        transition: 'opacity 8s ease-in-out', // Smooth transition for fade-in
+      }}>
+        <CircularProgress />
+      </Box>
       <Box
         sx={{
           width: '100vw',
