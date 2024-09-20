@@ -1,12 +1,13 @@
-import logo from './logo.svg';
 import './App.css';
 
 import { BrowserRouter as Router, Routes ,Route } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Paper } from '@mui/material';
 import NavBar from './components/NavBar'
 import Home from './pages/Home';
+import Record from './pages/Record';
+import AboutUs from './pages/AboutUs';
+import UserManual from './pages/UserManual';
 
 function App() {
   const theme = createTheme({
@@ -17,13 +18,15 @@ function App() {
 
   return (
     <Router>
+      <CssBaseline/>
       <ThemeProvider theme={theme}>
-      <Paper sx={{height: "100vh"}}>
-        <NavBar/>
-        <Routes>
-          <Route path="/" element={<Home/>}/>
-        </Routes>
-        </Paper>
+          <NavBar/>
+          <Routes>
+            <Route path="/" element={<Home/>}/>
+            <Route path="/record" element={<Record/>}/>
+            <Route path="/aboutUs" element={<AboutUs/>}/>
+            <Route path="/userManual" element={<UserManual/>}/>
+          </Routes>
       </ThemeProvider>
     </Router>
   );

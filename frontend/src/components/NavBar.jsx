@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 
-const pages = ['Record!','User Manual', 'About Us'];
+const pages = [['Record!','/record'],['User Manual','/userManual'],['About Us','/aboutUs']];
 const settings = ['Account', 'Dashboard', 'Logout'];
 
 function NavBar() {
@@ -36,23 +36,24 @@ function NavBar() {
   };
 
   return (
-    <AppBar position="static" sx={{ bgcolor: "#933535" }}>
+    <AppBar position="fixed" sx={{ bgcolor: "#933535"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AutoStoriesIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
-            variant="h6"
+            variant="h5"
             noWrap
             component="a"
             href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              fontFamily: 'sans-serif',
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              paddingRight: '50px'
             }}
           >
             PELE
@@ -86,8 +87,8 @@ function NavBar() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{page}</Typography>
+                <MenuItem key={page[0]} onClick={handleCloseNavMenu} to={page[1]}>
+                  <Typography sx={{ textAlign: 'center' }}>{page[0]}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -114,11 +115,12 @@ function NavBar() {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
-                key={page}
+                href={page[1]}
+                key={page[0]}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: 'white', display: 'block', paddingLeft: '25px', paddingRight: '25px' }}
               >
-                {page}
+                <Typography fontWeight={700} sx={{letterSpacing: '0.1rem'}}>{page[0]}</Typography>
               </Button>
             ))}
           </Box>

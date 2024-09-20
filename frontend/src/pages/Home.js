@@ -1,6 +1,5 @@
 import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -8,7 +7,7 @@ import Link from '@mui/material/Link';
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary">
+    <Typography variant="body2" >
       {'Copyright © '}
       <Link color="inherit" href="https://www.youtube.com/watch?v=98BMrRXvRjc">
         PELE INC
@@ -19,21 +18,19 @@ function Copyright() {
   );
 }
 
-const defaultTheme = createTheme();
+
 
 export default function Home() {
   return (
-    <ThemeProvider theme={defaultTheme}>
-        
       <Box
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '95vh',
+          minHeight: '100vh',
         }}
       >
         <CssBaseline />
-        <Container component="main" sx={{ mt: 8}} maxWidth="sm" >
+        <Container component="main" sx={{ mt: 18}} maxWidth="sm" >
             <Typography variant="h2" component="h1" gutterBottom>
                 Project PELE
             </Typography>
@@ -63,7 +60,7 @@ export default function Home() {
             px: 2,
             mt: 'auto',
             backgroundColor: (theme) =>
-              theme.palette.mode === 'dark'
+              theme.palette.mode === 'light'
                 ? theme.palette.grey[200]
                 : theme.palette.grey[800],
           }}
@@ -76,6 +73,5 @@ export default function Home() {
           </Container>
         </Box>
       </Box>
-    </ThemeProvider>
   );
 }
