@@ -5,27 +5,36 @@ import Questions from '../components/Questions';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const Record = () => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [generate, setGenerate] = useState(false);
-  const [seconds, setSeconds] = useState(0);
+  const [isRecording, setIsRecording] = useState(false);  // state for the record button
+  const [generate, setGenerate] = useState(false); // state for the generate button
+  const [seconds, setSeconds] = useState(0);  // to track seconds of recording time
   const [volume, setVolume] = useState(0); // To track the volume level
+  const [audioUrl, setAudioUrl] = useState(null); // Store the recorded audio
+
+  // use ref used here to keep different api usages stable and consistant across rerenders
   const audioContextRef = useRef(null);
   const analyzerRef = useRef(null);
   const microphoneRef = useRef(null);
+  const mediaRecorderRef = useRef(null); // Ref to store media recorder
+  const recordedChunksRef = useRef([]); // Ref to store audio chunks
+  const overallRecordedChunksRef = useRef([]);
   const animationFrameRef = useRef(null);
 
+  // use effect for seconds incrementation when recording
   useEffect(() => {
     let timer;
     if (isRecording) {
       timer = setInterval(() => {
         setSeconds((prev) => prev + 1);
       }, 1000);
-    } else if (!isRecording) {
+    } else {
       clearInterval(timer);
+      console.log(audioUrl)
     }
     return () => clearInterval(timer);
   }, [isRecording]);
 
+  // use effect to call start/stop audio capture functionality
   useEffect(() => {
     if (isRecording) {
       startAudioCapture();
@@ -36,15 +45,27 @@ const Record = () => {
 
   const startAudioCapture = async () => {
     if (!navigator.mediaDevices.getUserMedia) return;
-    
+
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-      analyzerRef.current = audioContextRef.current.createAnalyser();
+      analyzerRef.current = await audioContextRef.current.createAnalyser();
       analyzerRef.current.fftSize = 256;
 
-      microphoneRef.current = audioContextRef.current.createMediaStreamSource(stream);
-      microphoneRef.current.connect(analyzerRef.current);
+      microphoneRef.current = await audioContextRef.current.createMediaStreamSource(stream);
+      await microphoneRef.current.connect(analyzerRef.current);
+
+      // Initialize MediaRecorder to capture audio data
+      mediaRecorderRef.current = new MediaRecorder(stream);
+      recordedChunksRef.current = []; // Reset chunks on new recording
+
+      // Capture audio chunks and store them
+      mediaRecorderRef.current.ondataavailable = (event) => {
+        if (event.data.size > 0) recordedChunksRef.current.push(event.data);
+      };
+
+      // Start recording
+      await mediaRecorderRef.current.start();
 
       const dataArray = new Uint8Array(analyzerRef.current.frequencyBinCount);
 
@@ -61,25 +82,58 @@ const Record = () => {
     }
   };
 
-  const stopAudioCapture = () => {
+  const stopAudioCapture = async () => {
     if (microphoneRef.current) {
-      microphoneRef.current.disconnect();
+      await microphoneRef.current.disconnect();
       microphoneRef.current = null;
     }
     if (audioContextRef.current) {
-      audioContextRef.current.close();
+      await audioContextRef.current.close();
       audioContextRef.current = null;
     }
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
     }
     setVolume(0); // Reset volume when stopped
+
+    // Stop media recorder and create an audio URL from recorded chunks
+    if (mediaRecorderRef.current) {
+      await mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.onstop = async () => {
+        // Combine the existing recorded chunks with the new ones
+        await overallRecordedChunksRef.current.push.apply(overallRecordedChunksRef.current, recordedChunksRef.current)
+        const blob = new Blob(overallRecordedChunksRef.current, { type: 'audio/webm' });
+
+        console.log('Blob size:', blob.size);
+
+        // Revoke the old audio URL to release memory
+        if (audioUrl) {
+          URL.revokeObjectURL(audioUrl);
+        }
+
+        const newAudioUrl = URL.createObjectURL(blob);
+        setAudioUrl(newAudioUrl); // Store the new combined audio URL for playback
+
+        const audioElement = document.querySelector('audio');
+        if (audioElement) {
+          audioElement.src = newAudioUrl; // Set new source
+          audioElement.currentTime = 0;   // Reset playback position
+          audioElement.load();            // Reload the new audio file
+        }
+
+        
+      };
+    }
   };
+
+
 
   const handleRecordingToggle = () => {
     setIsRecording(!isRecording);
   };
 
+  // Generate functionality
+  // TO DO: send over audio serverside here
   const handleGenerate = () => {
     setIsRecording(false);
     setGenerate(!generate);
@@ -89,8 +143,12 @@ const Record = () => {
   const handleDelete = () => {
     setIsRecording(false);
     setSeconds(0);
+    setAudioUrl(null); // Clear the recorded audio
+    recordedChunksRef.current = []; // Clear the recorded chunks
+    overallRecordedChunksRef.current = []
   };
 
+  // helper to make seconds into 00:00 format
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -138,9 +196,9 @@ const Record = () => {
               }}
             >
               {isRecording ? (
-                <Typography fontWeight={700} letterSpacing={'0.1rem'}>Stop</Typography>
+                <Typography fontWeight={700} letterSpacing={'0.1rem'} >Stop</Typography>
               ) : (
-                <Typography fontWeight={700} letterSpacing={'0.1rem'}>Record</Typography>
+                <Typography fontWeight={700} letterSpacing={'0.1rem'} >Record</Typography>
               )}
             </Button>
 
@@ -174,7 +232,7 @@ const Record = () => {
               height: '30px',
               backgroundColor: '#2d2d2d',
               position: 'absolute',
-              opacity: isRecording? 1 : 0
+              opacity: isRecording ? 1 : 0
             }}
           >
             <Box
@@ -206,6 +264,20 @@ const Record = () => {
               <Typography fontWeight={550} letterSpacing={'.1rem'}>Generate</Typography>
             </Button>
           </Box>
+
+          {/* Playback Button */}
+          {audioUrl && (
+            <Box sx={{ position: 'absolute', bottom: 100 }}>
+              <audio
+                controls
+                src={audioUrl}
+                type="audio/webm"
+                onPlay={() => {
+                  console.log("Current src of the audio tag:", audioUrl);
+                }}
+              ></audio>
+            </Box>
+          )}
         </Box>
       ) : (
         <Questions back={handleGenerate} />
