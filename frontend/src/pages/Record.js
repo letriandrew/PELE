@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, Typography, Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Questions from '../components/Questions';
-import DeleteIcon from '@mui/icons-material/Delete';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import BlinkingCircle from '../components/BlinkingCircle';
+import GenerateButton from '../components/GenerateButton';
+import DeleteButton from '../components/DeleteButton';
+import VolumeIndicator from '../components/VolumeIndicator';
 
 const Record = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -22,6 +24,7 @@ const Record = () => {
   const recordedChunksRef = useRef([]);
   const animationFrameRef = useRef(null);
 
+  // functionality for recorder timer
   useEffect(() => {
     let timer;
     if (isRecording && !pause) {
@@ -34,6 +37,7 @@ const Record = () => {
     return () => clearInterval(timer);
   }, [isRecording, pause]);
 
+  // functionality for starting/stopping audio capture
   useEffect(() => {
     if (isRecording) {
       startAudioCapture();
@@ -176,14 +180,10 @@ const Record = () => {
                 transform: 'translateX(-50%)',
               }}
             >
-              {isRecording ? (
-                <Typography fontWeight={700} letterSpacing={'0.1rem'}>END</Typography>
-              ) : (
-                <Typography fontWeight={700} letterSpacing={'0.1rem'}>Record</Typography>
-              )}
+                <Typography fontWeight={700} letterSpacing={'0.1rem'}>{isRecording ?'END':'Record'}</Typography>     
             </Button>
 
-            {!pause ? (
+            
               <Button
                 onClick={handlePause}
                 sx={{
@@ -196,25 +196,10 @@ const Record = () => {
                 }}
                 disabled={!isRecording}
               >
-                <PauseIcon sx={{ fontSize: 40, color: '#878593' }} />
+                {!pause ?<PauseIcon sx={{ fontSize: 40, color: '#878593' }} />:<PlayArrowIcon sx={{ fontSize: 40, color: '#878593' }} />}
               </Button>
-            ) : (
-              <Button
-                onClick={handlePause}
-                sx={{
-                  position: 'absolute',
-                  right: 'calc(50% + 90px)',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  minWidth: '40px',
-                  opacity: !isRecording ? '0' : '1',
-                }}
-                disabled={!isRecording}
-              >
-                <PlayArrowIcon sx={{ fontSize: 40, color: '#878593' }} />
-              </Button>
-            )}
-
+            
+            {/* Container for pause/play indicator */}
             <Box sx={{ 
               display: 'flex', 
               alignItems: 'center',
@@ -240,49 +225,20 @@ const Record = () => {
 
           </Box>
 
+          {/* Time */}
           <Typography variant="h5" sx={{ marginTop: 25, position: 'absolute' }}>
             {`${formatTime(seconds)}`}
           </Typography>
 
-          <Box
-            sx={{
-              marginTop: 40,
-              width: '200px',
-              height: '30px',
-              backgroundColor: '#2d2d2d',
-              position: 'absolute',
-              opacity: isRecording && !pause ? 1 : 0,
-            }}
-          >
-            <Box
-              sx={{
-                height: '100%',
-                width: `${volume * 100}%`,
-                backgroundColor: '#9D4747',
-                transition: 'width 0.1s',
-              }}
-            />
-          </Box>
+          {/* Volume indicator */}
+          <VolumeIndicator isRecording={isRecording} pause={pause} volume={volume}/>
 
+          {/* Generate Button */}
           <Box sx={{ position: 'absolute', bottom: 40 }}>
-            <Button
-              variant="contained"
-              disabled={audioUrl === null}
-              onClick={handleGenerate}
-              sx={{
-                opacity: 0.5,
-                backgroundColor: '#44a5ff',
-                disabled: audioUrl === null,
-                '&:hover': {
-                  backgroundColor: '#1976d2',
-                  opacity: 1,
-                },
-              }}
-            >
-              <Typography fontWeight={550} letterSpacing={'.1rem'}>Generate</Typography>
-            </Button>
+            <GenerateButton handleGenerate={handleGenerate} audioUrl = {audioUrl}/>
           </Box>
 
+          {/* Box for playback and delete button */}
           {audioUrl && (
             <Box sx={{ position: 'absolute', bottom: 100 }}>
               <Box
@@ -295,20 +251,14 @@ const Record = () => {
               >
                 <audio controls src={audioUrl} type="audio/webm"></audio>
               </Box>
-              <Button
-                onClick={handleDelete}
-                sx={{
-                  position: 'absolute',
-                  left: 'calc(60% + 155px)',
-                  top: '45%',
-                  transform: 'translateY(-50%)',
-                  minWidth: '40px',
-                  opacity: audioUrl === null ? '0' : '1',
-                }}
-                disabled={audioUrl === null}
-              >
-                <DeleteIcon sx={{ fontSize: 40, color: '#878593' }} />
-              </Button>
+              <Box sx = {{
+                position: 'absolute',
+                left: 'calc(60% + 155px)',
+                top: '45%',
+                transform: 'translateY(-50%)',
+              }}>
+                <DeleteButton handleDelete={handleDelete} audioUrl={audioUrl}/>
+              </Box>
             </Box>
           )}
         </Box>
