@@ -48,3 +48,6 @@ pnpm-lock.yaml
 
 # Ignore operating system files
 Thumbs.db
+
+# Ignore path
+path/
