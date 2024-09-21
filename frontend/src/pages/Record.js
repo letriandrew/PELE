@@ -5,6 +5,7 @@ import Questions from '../components/Questions';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import BlinkingCircle from '../components/BlinkingCircle';
 
 const Record = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -23,16 +24,15 @@ const Record = () => {
 
   useEffect(() => {
     let timer;
-    if (isRecording) {
+    if (isRecording && !pause) {
       timer = setInterval(() => {
         setSeconds((prev) => prev + 1);
       }, 1000);
     } else {
-      setSeconds(0);
       clearInterval(timer);
     }
     return () => clearInterval(timer);
-  }, [isRecording]);
+  }, [isRecording, pause]);
 
   useEffect(() => {
     if (isRecording) {
@@ -177,7 +177,7 @@ const Record = () => {
               }}
             >
               {isRecording ? (
-                <Typography fontWeight={700} letterSpacing={'0.1rem'}>Stop</Typography>
+                <Typography fontWeight={700} letterSpacing={'0.1rem'}>END</Typography>
               ) : (
                 <Typography fontWeight={700} letterSpacing={'0.1rem'}>Record</Typography>
               )}
@@ -188,7 +188,7 @@ const Record = () => {
                 onClick={handlePause}
                 sx={{
                   position: 'absolute',
-                  left: 'calc(50% + 90px)',
+                  right: 'calc(50% + 90px)',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   minWidth: '40px',
@@ -203,7 +203,7 @@ const Record = () => {
                 onClick={handlePause}
                 sx={{
                   position: 'absolute',
-                  left: 'calc(50% + 90px)',
+                  right: 'calc(50% + 90px)',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   minWidth: '40px',
@@ -214,6 +214,30 @@ const Record = () => {
                 <PlayArrowIcon sx={{ fontSize: 40, color: '#878593' }} />
               </Button>
             )}
+
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              position: 'absolute',
+              left: 'calc(50% + 90px)',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              minWidth: '40px',
+              opacity: !isRecording ? '0' : '1',
+            }}>
+              
+              <Typography color="textPrimary" sx = {{letterSpacing : '0.1rem', fontWeight: 700}}>
+                { !pause ?
+                'RECORDING'
+                :
+                'PAUSED'
+                }
+              </Typography>
+              { !pause &&
+              <BlinkingCircle/>
+              }
+            </Box>
+
           </Box>
 
           <Typography variant="h5" sx={{ marginTop: 25, position: 'absolute' }}>
@@ -243,12 +267,12 @@ const Record = () => {
           <Box sx={{ position: 'absolute', bottom: 40 }}>
             <Button
               variant="contained"
-              disabled={seconds === 0}
+              disabled={audioUrl === null}
               onClick={handleGenerate}
               sx={{
                 opacity: 0.5,
                 backgroundColor: '#44a5ff',
-                disabled: seconds === 0,
+                disabled: audioUrl === null,
                 '&:hover': {
                   backgroundColor: '#1976d2',
                   opacity: 1,
@@ -261,12 +285,21 @@ const Record = () => {
 
           {audioUrl && (
             <Box sx={{ position: 'absolute', bottom: 100 }}>
-              <audio controls src={audioUrl} type="audio/webm"></audio>
+              <Box
+                sx={{
+                  backgroundColor: '#191919', // Change the color as needed
+                  padding: '10px', // Adjust padding to create spacing around the audio element
+                  paddingTop: '15px',
+                  borderRadius: '35px', // Optional: to round the corners
+                }}
+              >
+                <audio controls src={audioUrl} type="audio/webm"></audio>
+              </Box>
               <Button
                 onClick={handleDelete}
                 sx={{
                   position: 'absolute',
-                  left: 'calc(50% + 155px)',
+                  left: 'calc(60% + 155px)',
                   top: '45%',
                   transform: 'translateY(-50%)',
                   minWidth: '40px',
