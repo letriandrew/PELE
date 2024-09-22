@@ -8,6 +8,9 @@ import BlinkingCircle from '../components/BlinkingCircle';
 import GenerateButton from '../components/GenerateButton';
 import DeleteButton from '../components/DeleteButton';
 import VolumeIndicator from '../components/VolumeIndicator';
+import RecordButton from '../components/RecordButton';
+import PausePlayButton from '../components/PausePlayButton';
+import PausePlayIndicator from '../components/PausePlayIndicator';
 
 const Record = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -28,6 +31,7 @@ const Record = () => {
   useEffect(() => {
     let timer;
     if (isRecording && !pause) {
+      audioUrl && setSeconds(0);
       timer = setInterval(() => {
         setSeconds((prev) => prev + 1);
       }, 1000);
@@ -109,6 +113,11 @@ const Record = () => {
   };
 
   const handleRecordingToggle = () => {
+    if (!isRecording) {
+      setSeconds(0);
+      setAudioUrl(null);
+      setPause(false)
+    }
     setIsRecording(!isRecording);
   };
 
@@ -160,67 +169,37 @@ const Record = () => {
         >
           <CssBaseline />
 
-          <Box sx={{ position: 'relative' }}>
-            <Button
-              variant="contained"
-              onClick={handleRecordingToggle}
-              sx={{
-                marginTop: '-80px',
-                width: '150px',
-                height: '150px',
-                borderRadius: '50%',
-                backgroundColor: isRecording ? 'red' : '#878593',
-                opacity: 0.5,
-                '&:hover': {
-                  backgroundColor: isRecording ? 'darkred' : '#56545e',
-                  opacity: 1,
-                },
-                position: 'absolute',
-                left: '50%',
-                transform: 'translateX(-50%)',
-              }}
-            >
-                <Typography fontWeight={700} letterSpacing={'0.1rem'}>{isRecording ?'END':'Record'}</Typography>     
-            </Button>
+          <Box sx={{
+            position: 'relative',
+            marginTop: '-80px',
+            position: 'absolute',
+            left: '50%',
+            transform: 'translateX(-50%)'
+          }}
+          >
+            <RecordButton handleRecordingToggle={handleRecordingToggle} isRecording={isRecording} />
 
-            
-              <Button
-                onClick={handlePause}
-                sx={{
-                  position: 'absolute',
-                  right: 'calc(50% + 90px)',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  minWidth: '40px',
-                  opacity: !isRecording ? '0' : '1',
-                }}
-                disabled={!isRecording}
-              >
-                {!pause ?<PauseIcon sx={{ fontSize: 40, color: '#878593' }} />:<PlayArrowIcon sx={{ fontSize: 40, color: '#878593' }} />}
-              </Button>
-            
+            <Box sx={{
+              position: 'absolute',
+              right: 'calc(50% + 90px)',
+              top: '50%',
+              transform: 'translateY(-50%)'
+            }}>
+              <PausePlayButton handlePause={handlePause} isRecording={isRecording} pause={pause} />
+            </Box>
+
             {/* Container for pause/play indicator */}
-            <Box sx={{ 
-              display: 'flex', 
+            <Box sx={{
+              display: 'flex',
               alignItems: 'center',
               position: 'absolute',
               left: 'calc(50% + 90px)',
               top: '50%',
               transform: 'translateY(-50%)',
-              minWidth: '40px',
-              opacity: !isRecording ? '0' : '1',
             }}>
-              
-              <Typography color="textPrimary" sx = {{letterSpacing : '0.1rem', fontWeight: 700}}>
-                { !pause ?
-                'RECORDING'
-                :
-                'PAUSED'
-                }
-              </Typography>
-              { !pause &&
-              <BlinkingCircle/>
-              }
+
+              <PausePlayIndicator isRecording={isRecording} pause={pause} />
+
             </Box>
 
           </Box>
@@ -231,11 +210,11 @@ const Record = () => {
           </Typography>
 
           {/* Volume indicator */}
-          <VolumeIndicator isRecording={isRecording} pause={pause} volume={volume}/>
+          <VolumeIndicator isRecording={isRecording} pause={pause} volume={volume} />
 
           {/* Generate Button */}
           <Box sx={{ position: 'absolute', bottom: 40 }}>
-            <GenerateButton handleGenerate={handleGenerate} audioUrl = {audioUrl}/>
+            <GenerateButton handleGenerate={handleGenerate} audioUrl={audioUrl} />
           </Box>
 
           {/* Box for playback and delete button */}
@@ -243,21 +222,21 @@ const Record = () => {
             <Box sx={{ position: 'absolute', bottom: 100 }}>
               <Box
                 sx={{
-                  backgroundColor: '#191919', // Change the color as needed
-                  padding: '10px', // Adjust padding to create spacing around the audio element
+                  backgroundColor: '#191919', 
+                  padding: '10px', 
                   paddingTop: '15px',
-                  borderRadius: '35px', // Optional: to round the corners
+                  borderRadius: '35px', 
                 }}
               >
                 <audio controls src={audioUrl} type="audio/webm"></audio>
               </Box>
-              <Box sx = {{
+              <Box sx={{
                 position: 'absolute',
                 left: 'calc(60% + 155px)',
                 top: '45%',
                 transform: 'translateY(-50%)',
               }}>
-                <DeleteButton handleDelete={handleDelete} audioUrl={audioUrl}/>
+                <DeleteButton handleDelete={handleDelete} audioUrl={audioUrl} />
               </Box>
             </Box>
           )}

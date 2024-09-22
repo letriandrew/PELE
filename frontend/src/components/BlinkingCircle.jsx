@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 
 
-// Used in Record.js
+// Used in PausePlayIndicator
 export default function BlinkingCircle () {
     return (
     <Box
