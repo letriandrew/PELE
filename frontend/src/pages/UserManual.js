@@ -1,44 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { Box, CssBaseline } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
+import React from 'react';
+import { Box, Typography, Card, CardContent, Divider, List, ListItem, ListItemText, ListItemIcon, CssBaseline } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
+import StepIcon from '@mui/icons-material/CheckCircleOutline';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import Markdown from 'markdown-to-jsx';
 
 const UserManual = () => {
-  const [loaded, setLoaded] = useState(false);
+  const descriptionFontSize = 18
 
-  useEffect(() => {
-    // Simulate image load event
-    const timer = setTimeout(() => {
-      setLoaded(true); // Change state to make the image visible
-    }, 4000); // Simulating slight delay before showing the image
-    return () => clearTimeout(timer);
-  }, []);
+  const steps = [
+    {
+      icon: <InfoIcon />,
+      title: 'Getting Started',
+      description: `###To begin using the platform, follow these steps:
+1.) Lorem ipsum odor amet, consectetuer adipiscing elit. Conubia commodo ac proin sociosqu sociosqu. 
+2.) Taciti ad dolor elit nostra quisque consequat. Fusce cursus nam tempor; mattis habitant elit potenti finibus. 
+3.) Hendrerit elementum viverra tristique maecenas ex quis sapien. 
+4.) Lobortis felis maecenas rhoncus aenean rutrum sapien. Dictumst ullamcorper vestibulum molestie phasellus amet enim facilisi. 
+5.) Dui odio nisi velit tempus luctus porta nam. Nulla potenti rhoncus ridiculus maecenas phasellus vitae. Quam mus erat cubilia et eget feugiat.`
+    },
+    {
+      icon:<StepIcon />,
+      title: 'Using the Recorder',
+      description: `###Learn how to utilize PELE to enhance your learning:
+- Lorem ipsum odor amet, consectetuer adipiscing elit. Conubia commodo ac proin sociosqu sociosqu. 
+- Taciti ad dolor elit nostra quisque consequat. Fusce cursus nam tempor; mattis habitant elit potenti finibus. 
+- Hendrerit elementum viverra tristique maecenas ex quis sapien. 
+- Lobortis felis maecenas rhoncus aenean rutrum sapien. Dictumst ullamcorper vestibulum molestie phasellus amet enim facilisi.`
+    },
+    {
+      icon:<HelpOutlineIcon />,
+      title: 'FAQ',
+      description: `###Here are answers to some commonly asked questions:
+1.) **Lorem ipsum odor amet?** 
+consectetuer adipiscing elit. Conubia commodo ac proin sociosqu sociosqu. 
+2.) **Taciti ad dolor elit nostra quisque consequat?** 
+Fusce cursus nam tempor; mattis habitant elit potenti finibus. 
+3.) **Hendrerit elementum?** 
+viverra tristique maecenas ex quis sapien.`
+    },
+  ];
 
   return (
-    <>
+    <Box sx={{ padding: 4, maxWidth: '900px', margin: 'auto', marginTop: '120px' }}>
       <CssBaseline />
-      <Box sx={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)', // Center horizontally and vertically
-        opacity: loaded ? 0 : 1, // Control visibility with opacity
-        transition: 'opacity 8s ease-in-out', // Smooth transition for fade-in
-      }}>
-        <CircularProgress />
-      </Box>
-      <Box
-        sx={{
-          width: '100vw',
-          height: '100vh',
-          backgroundImage: `url(https://i.ytimg.com/vi/678cV9ldaMg/maxresdefault.jpg)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          opacity: loaded ? 1 : 0, // Control visibility with opacity
-          transition: 'opacity 15s ease-in-out', // Smooth transition for fade-in
-        }}
-      />
-    </>
+
+      <List>
+        {steps.map((step, index) => (
+          <Card key={index} sx={{ marginBottom: 2 }}>
+            <CardContent>
+              <ListItem>
+                <ListItemIcon>
+                  {step.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                      {step.title}
+                    </Typography>
+                  }
+                  secondary={
+                    <Markdown
+                      options={{ forceBlock: true }}
+                      style={{ color: 'textSecondary', whiteSpace: 'pre-line' }}
+                    >
+                      {step.description}
+                    </Markdown>
+                  }
+                />
+              </ListItem>
+            </CardContent>
+          </Card>
+        ))}
+      </List>
+    </Box>
   );
 };
 
