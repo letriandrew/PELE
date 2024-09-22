@@ -121,6 +121,7 @@ const Record = () => {
     setIsRecording(!isRecording);
   };
 
+  // axios call here to server
   const handleGenerate = () => {
     setIsRecording(false);
     setGenerate(!generate);

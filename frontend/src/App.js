@@ -8,6 +8,8 @@ import Home from './pages/Home';
 import Record from './pages/Record';
 import AboutUs from './pages/AboutUs';
 import UserManual from './pages/UserManual';
+import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 
 function App() {
   const theme = createTheme({
@@ -26,6 +28,8 @@ function App() {
             <Route path="/record" element={<Record/>}/>
             <Route path="/aboutUs" element={<AboutUs/>}/>
             <Route path="/userManual" element={<UserManual/>}/>
+            <Route path="/signUp" element={<SignUp/>}/>
+            <Route path="/signIn" element={<SignIn/>}/>
           </Routes>
       </ThemeProvider>
     </Router>
