@@ -2,6 +2,8 @@ import { Button, Typography, Box, Card, CardContent} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import CssBaseline from '@mui/material/CssBaseline';
 
+
+// Used in Record.js
 export default function Questions ({back}) {
     return(
         <Box

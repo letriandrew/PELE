@@ -1,5 +1,7 @@
 import { Box } from "@mui/material";
 
+
+// Used in PausePlayIndicator
 export default function BlinkingCircle () {
     return (
     <Box
