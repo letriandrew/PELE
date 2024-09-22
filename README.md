@@ -13,4 +13,4 @@ https://aaalab.stanford.edu/papers/Protege_Effect_Teachable_Agents.pdf
 # Backend
 
 1. cd into backend
-2. uvicorn main:app --reload
+2. python -m uvicorn app.main:app --reload
