@@ -7,18 +7,28 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-const pages = [['Record!', '/record'], ['User Manual', '/userManual'], ['About Us', '/aboutUs']];
 const settings = ['Account', 'Dashboard', 'Logout'];
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [pages,setPages] = React.useState([['Sign Up', '/signUp'],['Sign In','/signIn'],['About Us', '/aboutUs']])
+  const [user, setUser] = React.useState(true)   // will change later to accomidate auth context provider
+
+  React.useEffect(() =>{
+    if(user){
+      setPages([['Record!', '/record'], ['User Manual', '/userManual'], ['About Us', '/aboutUs']])
+    }
+    else{
+      setPages([['Sign Up', '/signUp'],['Sign In','/signIn'],['About Us', '/aboutUs']])
+    }
+  },[user])
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -36,13 +46,13 @@ function NavBar() {
   };
 
   return (
-    <AppBar position="fixed"  sx={{ 
-        background: "linear-gradient(90deg, #7f99ff 0%, #d63b3b 100%)", // Linear gradient, 
-        marginTop: 4, 
-        mx: 2, // Adds margin to the left and right
-        borderRadius: 10, // Adjusts the roundness of the corners
-        width: `calc(100% - 32px)`, // Ensures it fits the container minus the horizontal margins
-      }}>
+    <AppBar position="fixed" sx={{
+      background: "linear-gradient(90deg, #7f99ff 0%, #d63b3b 100%)", // Linear gradient, 
+      marginTop: 4,
+      mx: 2, // Adds margin to the left and right
+      borderRadius: 10, // Adjusts the roundness of the corners
+      width: `calc(100% - 32px)`, // Ensures it fits the container minus the horizontal margins
+    }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AutoStoriesIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -92,11 +102,14 @@ function NavBar() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page[0]} onClick={handleCloseNavMenu} to={page[1]}>
-                  <Typography sx={{ textAlign: 'center' }}>{page[0]}</Typography>
-                </MenuItem>
-              ))}
+
+              {
+                  pages.map((page) => (
+                    <MenuItem key={page[0]} onClick={handleCloseNavMenu} to={page[1]}>
+                      <Typography sx={{ textAlign: 'center' }}>{page[0]}</Typography>
+                    </MenuItem>
+                  ))
+              }
             </Menu>
           </Box>
           <AutoStoriesIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -104,7 +117,7 @@ function NavBar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -133,7 +146,7 @@ function NavBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <AccountCircleIcon sx={{ fontSize: 40 }} />
               </IconButton>
             </Tooltip>
             <Menu
