@@ -9,13 +9,13 @@ export default function ({handleGenerate,audioUrl}) {
             disabled={audioUrl === null}
             onClick={handleGenerate}
             sx={{
-                opacity: 0.5,
-                backgroundColor: '#44a5ff',
+                opacity: audioUrl === null ? 0.5 : 1,
                 disabled: audioUrl === null,
-                '&:hover': {
-                    backgroundColor: '#1976d2',
-                    opacity: 1,
-                },
+                background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+                    color: 'white',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
+                    },
             }}
         >
             <Typography fontWeight={550} letterSpacing={'.1rem'}>Generate</Typography>

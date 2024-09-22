@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-const settings = ['Account', 'Dashboard', 'Logout'];
+const settings = ['Logout'];
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -143,6 +143,7 @@ function NavBar() {
               </Button>
             ))}
           </Box>
+          { user &&
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -172,6 +173,7 @@ function NavBar() {
               ))}
             </Menu>
           </Box>
+          }
         </Toolbar>
       </Container>
     </AppBar>
