@@ -5,7 +5,6 @@ load_dotenv()  # Load environment variables
 
 class Settings:
     openai_api_key: str = os.getenv("OPEN_API_KEY")
-    mongo_url: str = os.getenv("MONGODB_CONN_STRING")  # Add MongoDB URI
 
     def __init__(self):
         if not self.openai_api_key:
