@@ -14,3 +14,8 @@ https://aaalab.stanford.edu/papers/Protege_Effect_Teachable_Agents.pdf
 
 1. cd into backend
 2. python -m uvicorn app.main:app --reload
+
+
+# Docker
+
+1. docker-compose up --build
