@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()  # Load environment variables
 
 class Settings:
-    openai_api_key: str = os.getenv("OPEN_API_KEY")
+    openai_api_key: str = os.getenv("OPENAI_API_KEY")
 
     def __init__(self):
         if not self.openai_api_key:

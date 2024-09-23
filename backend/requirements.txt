@@ -4,4 +4,7 @@ python-dotenv
 motor
 openai
 sqlalchemy
+passlib
 alembic
+python-multipart
+pydub

@@ -12,6 +12,8 @@ import RecordButton from '../components/RecordButton';
 import PausePlayButton from '../components/PausePlayButton';
 import PausePlayIndicator from '../components/PausePlayIndicator';
 
+import axios from 'axios';
+
 const Record = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [generate, setGenerate] = useState(false);
@@ -122,10 +124,31 @@ const Record = () => {
   };
 
   // axios call here to server
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setIsRecording(false);
     setGenerate(!generate);
-    console.log(generate);
+
+    if (audioUrl) {
+      const blob = new Blob(recordedChunksRef.current, { type: 'audio/webm' });
+      
+      // Prepare form data
+      const formData = new FormData();
+      formData.append('audio', blob, 'recording.webm'); // 'audio' is the field name, 'recording.webm' is the file name
+      
+      try {
+        // Send POST request to FastAPI backend
+        const response = await axios.post('http://localhost:8000/process-audio', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        
+        // Handle response (e.g., display the text received from the backend)
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error sending audio:', error);
+      }
+    }
   };
 
   const handleDelete = () => {
