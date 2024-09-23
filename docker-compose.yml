@@ -1,0 +1,18 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    volumes:
+      - ../:/app  # Mounts the root directory
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./sqlite.db  # Adjust if necessary
+
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
