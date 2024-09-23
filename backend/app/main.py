@@ -1,4 +1,4 @@
-from app.routes import generate
+from app.routes import generate, audio
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -72,3 +72,4 @@ def read_root():
     return {"message": "Welcome!"}
 
 app.include_router(generate.router)
+app.include_router(audio.router)
