@@ -6,3 +6,4 @@ openai
 sqlalchemy
 passlib
 alembic
+python-multipart
