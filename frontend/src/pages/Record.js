@@ -21,6 +21,8 @@ const Record = () => {
   const [volume, setVolume] = useState(0);
   const [audioUrl, setAudioUrl] = useState(null);
   const [pause, setPause] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
+
 
   const audioContextRef = useRef(null);
   const analyzerRef = useRef(null);
@@ -104,6 +106,7 @@ const Record = () => {
       mediaRecorderRef.current.onstop = async () => {
         const blob = new Blob(recordedChunksRef.current, { type: 'audio/webm' });
         recordedChunksRef.current = [];
+        setAudioBlob(blob); //store the blob and ensure it doesnt get lost for backend transfer
         if (audioUrl) {
           URL.revokeObjectURL(audioUrl);
         }
@@ -128,12 +131,11 @@ const Record = () => {
     setIsRecording(false);
     setGenerate(!generate);
 
-    if (audioUrl) {
-      const blob = new Blob(recordedChunksRef.current, { type: 'audio/webm' });
-      
+    if (audioBlob) { //checking if stored blob exists
+
       // Prepare form data
       const formData = new FormData();
-      formData.append('audio', blob, 'recording.webm'); // 'audio' is the field name, 'recording.webm' is the file name
+      formData.append('audio', audioBlob, 'recording.webm'); // 'audio' is the field name, 'recording.webm' is the file name
       
       try {
         // Send POST request to FastAPI backend
@@ -144,10 +146,13 @@ const Record = () => {
         });
         
         // Handle response (e.g., display the text received from the backend)
-        console.log(response.data);
+        console.log('Response from backend:', response.data);
       } catch (error) {
         console.error('Error sending audio:', error);
       }
+    }
+    else {
+      console.error("No audio blob available.");
     }
   };
 
