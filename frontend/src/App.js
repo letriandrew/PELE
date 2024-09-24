@@ -11,6 +11,7 @@ import UserManual from './pages/UserManual';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import { AuthProvider } from './context/AuthContext';
+import PrivateRouteUser from './privateRoutes/privateRouteUser';
 
 function App() {
   const theme = createTheme({
@@ -27,11 +28,20 @@ function App() {
           <NavBar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/record" element={<Record />} />
             <Route path="/aboutUs" element={<AboutUs />} />
             <Route path="/userManual" element={<UserManual />} />
             <Route path="/signUp" element={<SignUp />} />
             <Route path="/signIn" element={<SignIn />} />
+
+            <Route 
+              path="/record" 
+              element={
+                <PrivateRouteUser>
+                  <Record />
+                </PrivateRouteUser>
+              } 
+            />
+
           </Routes>
         </ThemeProvider>
       </Router>

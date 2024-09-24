@@ -48,4 +48,14 @@ async function signOutUser(){
     }
 }
 
-export {signUpUser, signInUser, signOutUser}
+async function verifyToken(){
+    try {
+        const response = await apiService.get('/verifyToken')
+        return response
+    } catch (error) {
+        console.error("Verification error:", error);
+        return error;
+    }
+}
+
+export {signUpUser, signInUser, signOutUser, verifyToken}

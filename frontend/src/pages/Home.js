@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid2';
+import {AuthContext} from '../context/AuthContext';
 
 function Copyright() {
   return (
@@ -23,6 +23,7 @@ function Copyright() {
 
 export default function Home() {
   const [typedText, setTypedText] = useState('');
+  const auth = React.useContext(AuthContext)
   const fullText = 'Project PELE';
 
   useEffect(() => {
@@ -87,7 +88,7 @@ export default function Home() {
         
             <Button
               variant="contained"
-              href='/signUp'
+              href={auth.user ? '/record' : '/signUp'}
               sx={{
                 background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
                 color: 'white',

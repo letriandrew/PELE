@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status, APIRouter, Response
+from fastapi import Depends, HTTPException, status, APIRouter, Response, Cookie
 from sqlalchemy.orm import Session
 from .. import schemas
 from ..service import auth
@@ -56,4 +56,10 @@ async def login_for_access_token(
 @authRouter.get("/logout")
 async def logout(response: Response):
     response.delete_cookie("pele-access-token")
-    return {"status":"successfully logged out"}
+    return {"message":"successfully logged out"}
+
+@authRouter.get("/verifyToken")
+async def logout(token: str = Cookie(alias="pele-access-token"), db: Session = Depends(get_db)):
+    print("HERE",token)
+    await auth.get_current_user(db, token)
+    return {"message":"successfully verified"}
