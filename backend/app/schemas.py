@@ -22,17 +22,29 @@ class Item(ItemBase):
 
 class UserBase(BaseModel):
     email: str
-    name: str
 
 
 class UserCreate(UserBase):
+    name: str
     password: str
 
 
 class User(UserBase):
     id: int
+    name: str
     is_active: bool
     items: list[Item] = []
 
     class Config:
         from_attributes = True
+
+class UserLogin(UserBase):
+    password: str
+
+class UserToken(UserBase):
+    id: int
+    email:str
+    name: str
+
+class Token(BaseModel):
+    token: str

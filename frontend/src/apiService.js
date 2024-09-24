@@ -21,8 +21,41 @@ async function signUpUser(body){
         return response
     } catch (error) {
         console.error("Error during user sign up:", error);
-        return error.response;
+        return error;
     }
 }
 
-export {signUpUser}
+async function signInUser(body){
+    try {
+        const response = await apiService.post('/login',{
+            email: body.email,
+            password: body.password
+        })
+        return response
+    } catch (error) {
+        console.error("Error during user sign in:", error);
+        return error;
+    }
+}
+
+async function signOutUser(){
+    try {
+        const response = await apiService.get('/logout')
+        return response
+    } catch (error) {
+        console.error("Error during user sign out:", error);
+        return error;
+    }
+}
+
+async function verifyToken(){
+    try {
+        const response = await apiService.get('/verifyToken')
+        return response
+    } catch (error) {
+        console.error("Verification error:", error);
+        return error;
+    }
+}
+
+export {signUpUser, signInUser, signOutUser, verifyToken}

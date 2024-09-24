@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
+from .routes.auth import authRouter
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -22,6 +23,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# include different routes here
+app.include_router(authRouter)
 
 
 # Dependency
