@@ -1,6 +1,6 @@
 from app.routes import generate, audio
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
@@ -77,4 +77,11 @@ def read_root():
     return {"message": "Welcome!"}
 
 app.include_router(generate.router)
-app.include_router(audio.router)
+#app.include_router(audio.router)
+
+@app.post("/process-audio")
+async def process_audio(audio: UploadFile = File(...)):
+    # Save or process the file
+    audio_content = await audio.read()  # Read the content of the uploaded file
+    # Process content with OpenAI Whisper here
+    return {"message": "Audio received", "content type": audio.content_type } 
