@@ -39,7 +39,7 @@ async def login_for_access_token(
     
     # Set the access token in a cookie
     response.set_cookie(
-        key="token", 
+        key="pele-access-token", 
         value=access_token,
         httponly=False,                  
         secure=True,                  
@@ -52,3 +52,8 @@ async def login_for_access_token(
         "email": foundUser.email,
         "name": foundUser.name
     }
+
+@authRouter.get("/logout")
+async def logout(response: Response):
+    response.delete_cookie("pele-access-token")
+    return {"status":"successfully logged out"}

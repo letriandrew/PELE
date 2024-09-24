@@ -14,6 +14,7 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
 import { AuthDispatchContext , AuthContext} from '../context/AuthContext';
+import { signOutUser } from '../apiService';
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -26,9 +27,10 @@ function NavBar() {
 
   const navigate = useNavigate();
 
-  const settings = [['Logout',()=>{
+  const settings = [['Logout',async()=>{
     sessionStorage.removeItem('user');
     authDispatch({type:'reset'})
+    await signOutUser()
     navigate('/')
   }]];
 

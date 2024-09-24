@@ -38,4 +38,14 @@ async function signInUser(body){
     }
 }
 
-export {signUpUser, signInUser}
+async function signOutUser(){
+    try {
+        const response = await apiService.get('/logout')
+        return response
+    } catch (error) {
+        console.error("Error during user sign out:", error);
+        return error;
+    }
+}
+
+export {signUpUser, signInUser, signOutUser}
