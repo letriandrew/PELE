@@ -14,8 +14,8 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { GoogleIcon } from '../components/CustomIcons';
-
 import { signUpUser } from '../apiService';
+import AccountCreationNotification from '../components/AccountCreationNotification';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -43,6 +43,8 @@ export default function SignUp() {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [nameError, setNameError] = React.useState(false);
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+  const [notification, setNotification] = React.useState(false);
+  const [notificationStatus, setNotificationStatus] = React.useState(false);
 
 
   const validateInputs = () => {
@@ -84,14 +86,29 @@ export default function SignUp() {
 
   const handleSubmit = async(event) => {
     event.preventDefault();
+    const form = event.currentTarget;
     const data = new FormData(event.currentTarget);
     const response = await signUpUser({
       name: data.get('name'),
       email: data.get('email'),
       password: data.get('password'),
     });
-    console.log(response);
+    if (response.status === 200){
+      console.log("account creation success!",response.data)
+      form.reset();
+      setNotificationStatus(true)
+      setNotification(true)
+    }
+    else{
+      console.error("error in account creation",response)
+      setNotificationStatus(false)
+      setNotification(true)
+    }
   };
+
+  const handleCloseNotification =()=>{
+    setNotification(false)
+  }
 
   return (
     <>
@@ -216,6 +233,9 @@ export default function SignUp() {
                 </Button>
               </Box>
             </Card>
+            { notification &&
+            <AccountCreationNotification status = {notificationStatus} close = {handleCloseNotification}/>
+            }
           </Stack>
         </>
   );

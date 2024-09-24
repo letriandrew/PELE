@@ -21,8 +21,21 @@ async function signUpUser(body){
         return response
     } catch (error) {
         console.error("Error during user sign up:", error);
-        return error.response;
+        return error;
     }
 }
 
-export {signUpUser}
+async function signInUser(body){
+    try {
+        const response = await apiService.post('/login',{
+            email: body.email,
+            password: body.password
+        })
+        return response
+    } catch (error) {
+        console.error("Error during user sign in:", error);
+        return error;
+    }
+}
+
+export {signUpUser, signInUser}

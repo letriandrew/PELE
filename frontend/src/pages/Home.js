@@ -54,7 +54,16 @@ export default function Home() {
     >
       <CssBaseline />
       <Container component="main" sx={{ mt: 35, textAlign: 'center' }} maxWidth="sm">
-        {/* Typing animation for "Project PELE" */}
+        <Typography 
+        variant="h3"
+        sx={{
+          background: 'linear-gradient(45deg, #545050 30%, #b2b2b2 90%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}
+        >
+          Welcome to,
+        </Typography>
         <Typography
           variant="h2"
           component="h1"
@@ -70,7 +79,7 @@ export default function Home() {
 
         </Typography>
 
-        <Typography variant="h5" component="h2" gutterBottom marginBottom={10}>
+        <Typography variant="h5" component="h2" gutterBottom marginBottom={10} >
           {'PELE aka the Protégé Effect Learning Entity is an application to assist in learning by invoking the Protégé Effect.'}
         </Typography>
 

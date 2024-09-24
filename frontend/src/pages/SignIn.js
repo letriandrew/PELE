@@ -14,6 +14,9 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { GoogleIcon } from '../components/CustomIcons';
+import { signInUser } from '../apiService';
+import { useNavigate } from 'react-router-dom';
+import { AuthDispatchContext } from '../context/AuthContext';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -39,12 +42,13 @@ export default function SignIn() {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const authDispatch = React.useContext(AuthDispatchContext)
+  const navigate = useNavigate();
 
 
   const validateInputs = () => {
     const email = document.getElementById('email');
     const password = document.getElementById('password');
-    const name = document.getElementById('name');
 
     let isValid = true;
 
@@ -69,15 +73,24 @@ export default function SignIn() {
     return isValid;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
+    const response = await signInUser({
       email: data.get('email'),
       password: data.get('password'),
     });
+    
+    if (response.status === 200){
+      console.log("sign in success!",response.data)
+      sessionStorage.setItem('user',JSON.stringify(response.data))  // save basic user data in session storage for easy access
+      authDispatch({type:'change',payload:response.data})           // setting context provider use state
+      console.log(JSON.parse(sessionStorage.getItem('user')))
+      navigate('/')
+    }
+    else{
+      console.error("error during sign in",response)
+    }
   };
 
   return (

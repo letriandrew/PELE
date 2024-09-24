@@ -12,8 +12,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
-const settings = ['Logout'];
+import { useNavigate } from 'react-router-dom';
+import { AuthDispatchContext , AuthContext} from '../context/AuthContext';
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -21,14 +21,25 @@ function NavBar() {
   const [pages,setPages] = React.useState([['Sign Up', '/signUp'],['Sign In','/signIn'],['About Us', '/aboutUs']])
   const [user, setUser] = React.useState(true)   // will change later to accomidate auth context provider
 
+  const authDispatch = React.useContext(AuthDispatchContext)
+  const auth = React.useContext(AuthContext)
+
+  const navigate = useNavigate();
+
+  const settings = [['Logout',()=>{
+    sessionStorage.removeItem('user');
+    authDispatch({type:'reset'})
+    navigate('/')
+  }]];
+
   React.useEffect(() =>{
-    if(user){
+    if(JSON.parse(sessionStorage.getItem('user'))){
       setPages([['Record!', '/record'], ['User Manual', '/userManual'], ['About Us', '/aboutUs']])
     }
     else{
       setPages([['Sign Up', '/signUp'],['Sign In','/signIn'],['About Us', '/aboutUs']])
     }
-  },[user])
+  },[auth])
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -143,7 +154,12 @@ function NavBar() {
               </Button>
             ))}
           </Box>
-          { user &&
+          <>
+          { JSON.parse(sessionStorage.getItem('user')) &&
+          <Typography marginRight={2} fontSize={20}>{JSON.parse(sessionStorage.getItem('user')).name.substring(0,JSON.parse(sessionStorage.getItem('user')).name.indexOf(" "))}</Typography>
+          }
+
+          { JSON.parse(sessionStorage.getItem('user')) &&
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -167,13 +183,20 @@ function NavBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                <MenuItem 
+                  key={setting[0]} 
+                  onClick={()=>{
+                    handleCloseUserMenu()
+                    setting[1]()
+                  }}
+                >
+                  <Typography sx={{ textAlign: 'center' }}>{setting[0]}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
           }
+          </>
         </Toolbar>
       </Container>
     </AppBar>

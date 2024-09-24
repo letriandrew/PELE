@@ -4,6 +4,7 @@ from .. import schemas
 from ..service import auth
 from ..database import SessionLocal
 
+# may need to put this somewhere to import, cant just import from main or it causes circular dependency error
 def get_db():
     db = SessionLocal()
     try:
@@ -19,8 +20,8 @@ async def login_for_access_token(
     response: Response, 
     db: Session = Depends(get_db)
 ):
-    user = auth.authenticate_user(db, user)
-    if not user:
+    foundUser = auth.authenticate_user(db, user)
+    if not foundUser:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
@@ -30,9 +31,9 @@ async def login_for_access_token(
     # Create the access token
     access_token = auth.create_access_token(
         schemas.UserToken(
-            id=user.id,
-            email=user.email,
-            name=user.name
+            id=foundUser.id,
+            email=foundUser.email,
+            name=foundUser.name
         )
     )
     
@@ -46,4 +47,8 @@ async def login_for_access_token(
     )
     
     
-    return {"token": access_token}
+    return {
+        "id": foundUser.id,
+        "email": foundUser.email,
+        "name": foundUser.name
+    }
