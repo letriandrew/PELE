@@ -31,6 +31,8 @@ const Record = () => {
   const recordedChunksRef = useRef([]);
   const animationFrameRef = useRef(null);
 
+  const { setProcessedAudioList } = useAudio();
+
   // functionality for recorder timer
   useEffect(() => {
     let timer;
@@ -144,6 +146,8 @@ const Record = () => {
             'Content-Type': 'multipart/form-data',
           },
         });
+
+        setProcessedAudioList(response.data); // using react context api, we store the list without needing to serialize
         
         // Handle response (e.g., display the text received from the backend)
         console.log('Response from backend:', response.data);
