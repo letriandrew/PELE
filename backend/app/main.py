@@ -79,4 +79,4 @@ async def process_audio(audio: UploadFile = File(...)):
     # Save or process the file
     audio_content = await audio.read()  # Read the content of the uploaded file
     # Process content with OpenAI Whisper here
-    return {"message": "Audio received", "filename": audio.filename}
+    return {"message": "Audio received", "content type": audio.content_type } 
