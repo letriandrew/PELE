@@ -7,6 +7,6 @@ sqlalchemy
 passlib
 alembic
 python-multipart
-pydub
 PyJWT
 bcrypt
+ffmpeg-python
