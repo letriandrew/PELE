@@ -12,6 +12,10 @@ from .database.database import SessionLocal, crud, engine
 from .routes.auth import authRouter
 from .service.auth import get_current_user
 
+from openai import OpenAI
+from app.config import settings
+import io
+
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -103,6 +107,7 @@ def read_root():
 
 app.include_router(audio.router)
 
+
 """
 @app.post("/process-audio")
 async def process_audio(audio: UploadFile = File(...)):
@@ -122,5 +127,7 @@ async def process_audio(audio: UploadFile = File(...)):
     )
     return transcription
 """
+
+
 
 
