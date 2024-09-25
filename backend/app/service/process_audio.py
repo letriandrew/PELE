@@ -23,4 +23,4 @@ async def process_audio_file(file: UploadFile = File(...)):
         file=wav_io
     )
 
-    return transcription
+    return transcription.text

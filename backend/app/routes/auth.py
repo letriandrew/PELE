@@ -1,8 +1,8 @@
 from fastapi import Depends, HTTPException, status, APIRouter, Response, Cookie
 from sqlalchemy.orm import Session
-from .. import schemas
+from ..database import schemas
 from ..service import auth
-from ..database import SessionLocal
+from ..database.database import SessionLocal
 
 # may need to put this somewhere to import, cant just import from main or it causes circular dependency error
 def get_db():

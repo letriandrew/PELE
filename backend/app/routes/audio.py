@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, File, UploadFile
-from app.process_audio import process_audio_file
+from ..service.process_audio import process_audio_file
 
 router = APIRouter()
 

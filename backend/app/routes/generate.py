@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.openai_service import generate_text_from_prompt
+from ..service.openai_service import generate_text_from_prompt
 
 router = APIRouter()
 

@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 
-from . import models, schemas
+from . import models
+
+from . import schemas
 
 # hashing library
 from passlib.context import CryptContext

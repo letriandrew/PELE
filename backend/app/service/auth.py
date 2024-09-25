@@ -5,8 +5,8 @@ from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
-from .. import schemas
-from .. import crud
+from ..database import schemas
+from ..database.database import crud
 from sqlalchemy.orm import Session
 from ..config import settings
 

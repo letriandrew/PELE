@@ -5,10 +5,16 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-from . import crud, models, schemas
-from .database import SessionLocal, engine
+from .database import models
+
+from .database import schemas
+from .database.database import SessionLocal, crud, engine
 from .routes.auth import authRouter
 from .service.auth import get_current_user
+
+import io
+from openai import OpenAI
+from app.config import settings
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -105,5 +111,17 @@ def read_root():
 async def process_audio(audio: UploadFile = File(...)):
     # Save or process the file
     audio_content = await audio.read()  # Read the content of the uploaded file
-    # Process content with OpenAI Whisper here
-    return {"message": "Audio received", "content type": audio.content_type } 
+
+    buffer = io.BytesIO(audio_content)
+
+    buffer.name = "test.mp3"
+
+    client = OpenAI()
+    client.api_key = settings.openai_api_key
+
+    transcription =  client.audio.transcriptions.create(
+        model="whisper-1",
+        file=buffer,
+    )
+    return transcription
+
