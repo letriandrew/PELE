@@ -27,7 +27,7 @@ async function signUpUser(body){
 
 async function signInUser(body){
     try {
-        const response = await apiService.post('/login',{
+        const response = await apiService.post('/auth/login',{
             email: body.email,
             password: body.password
         })
@@ -40,7 +40,7 @@ async function signInUser(body){
 
 async function signOutUser(){
     try {
-        const response = await apiService.get('/logout')
+        const response = await apiService.get('/auth/logout')
         return response
     } catch (error) {
         console.error("Error during user sign out:", error);
@@ -50,7 +50,7 @@ async function signOutUser(){
 
 async function verifyToken(){
     try {
-        const response = await apiService.get('/verifyToken')
+        const response = await apiService.get('/auth/verifyToken')
         return response
     } catch (error) {
         console.error("Verification error:", error);
