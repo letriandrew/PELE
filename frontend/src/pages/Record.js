@@ -133,7 +133,7 @@ const Record = () => {
     setIsRecording(false);
     setGenerate(!generate);
 
-    if (audioBlob) { //checking if stored blob exists
+    if (audioBlob && !generate) { //checking if stored blob exists
 
       // Prepare form data
       const formData = new FormData();
@@ -151,6 +151,7 @@ const Record = () => {
         
         // Handle response (e.g., display the text received from the backend)
         console.log('Response from backend:', response.data);
+      
       } catch (error) {
         console.error('Error sending audio:', error);
       }
@@ -158,12 +159,14 @@ const Record = () => {
     else {
       console.error("No audio blob available.");
     }
+    
   };
 
   const handleDelete = () => {
     setIsRecording(false);
     setSeconds(0);
     setAudioUrl(null);
+    setAudioBlob(null)
     setPause(false);
     recordedChunksRef.current = [];
   };
