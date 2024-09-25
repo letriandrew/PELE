@@ -60,6 +60,5 @@ async def logout(response: Response):
 
 @authRouter.get("/verifyToken")
 async def logout(token: str = Cookie(alias="pele-access-token"), db: Session = Depends(get_db)):
-    print("HERE",token)
     await auth.get_current_user(db, token)
     return {"message":"successfully verified"}

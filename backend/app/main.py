@@ -1,12 +1,14 @@
 from app.routes import generate, audio
 
-from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
+from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 from .routes.auth import authRouter
+from .service.auth import get_current_user
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -24,9 +26,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# middleware to secure all routes starting with "/audio/"
+@app.middleware("http")
+async def secure_path(request: Request, call_next):
+    db = SessionLocal()
+    try:
+        target_paths = ["/audio/"]
+
+        token = request.cookies.get('pele-access-token')
+        if any(request.url.path.startswith(path) for path in target_paths):
+            try:
+                await get_current_user(db, token)
+            except HTTPException as e:
+                return JSONResponse(status_code=e.status_code, content={"message": e.detail})
+        
+        response = await call_next(request)
+    finally:
+        db.close()
+
+    return response
+
 
 # include different routes here
-app.include_router(authRouter)
+app.include_router(authRouter, prefix='/auth')
+app.include_router(generate.router)
 
 
 # Dependency
@@ -72,11 +95,10 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
 
-@app.get("/")
+@app.get("/test")
 def read_root():
     return {"message": "Welcome!"}
 
-app.include_router(generate.router)
 #app.include_router(audio.router)
 
 @app.post("/process-audio")
