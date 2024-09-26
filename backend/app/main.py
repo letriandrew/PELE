@@ -1,4 +1,4 @@
-from app.routes import generate, audio
+from app.routes import audio
 
 from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile, Request
 from fastapi.responses import JSONResponse
@@ -11,10 +11,6 @@ from .database import schemas
 from .database.database import SessionLocal, crud, engine
 from .routes.auth import authRouter
 from .service.auth import get_current_user
-
-from openai import OpenAI
-from app.config import settings
-import io
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -55,7 +51,6 @@ async def secure_path(request: Request, call_next):
 
 # include different routes here
 app.include_router(authRouter, prefix='/auth')
-app.include_router(generate.router)
 
 
 # Dependency
@@ -106,27 +101,6 @@ def read_root():
     return {"message": "Welcome!"}
 
 app.include_router(audio.router)
-
-
-"""
-@app.post("/process-audio")
-async def process_audio(audio: UploadFile = File(...)):
-    # Save or process the file
-    audio_content = await audio.read()  # Read the content of the uploaded file
-
-    buffer = io.BytesIO(audio_content)
-
-    buffer.name = "test.mp3"
-
-    client = OpenAI()
-    client.api_key = settings.openai_api_key
-
-    transcription =  client.audio.transcriptions.create(
-        model="whisper-1",
-        file=buffer,
-    )
-    return transcription
-"""
 
 
 

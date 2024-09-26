@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, File, UploadFile
 from ..service.audio import create_transcript, produce_questions
 
-from openai import OpenAI
 from app.config import settings
 import io
 
@@ -16,12 +15,15 @@ async def process_audio(audio: UploadFile = File(...)):
         buffer.name = "test.mp3"
 
         transcript = create_transcript(buffer)
+        print(transcript)
 
-        return transcript
+        #return transcript
 
-        #questions_list = produce_questions(transcript)
+        questions_list = produce_questions(transcript)
+        print(questions_list)
 
-        #return questions_list
+        return {"questions": questions_list}
     
     except Exception as e:
+        print(f"Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
