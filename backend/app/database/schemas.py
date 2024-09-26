@@ -10,7 +10,7 @@ class QuestionBase(BaseModel):
     answer: Optional[str] = None
 
 class QuestionCreate(QuestionBase):
-    transcript_id: int
+    pass
 
 class Question(QuestionBase):
     id: int

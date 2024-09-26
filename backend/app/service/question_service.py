@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from ..database import schemas, models
 
-def save_question(db: Session, question: schemas.QuestionCreate):
-    db_question = models.Question(question = question.question, answer = question.answer, transcript_id = question.transcript_id)
+def save_question(db: Session, question: schemas.QuestionCreate, transcript_id: int):
+    db_question = models.Question(question = question.question, answer = question.answer, transcript_id = transcript_id)
     db.add(db_question)
     db.commit()
     db.refresh(db_question)

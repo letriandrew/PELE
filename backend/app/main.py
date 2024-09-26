@@ -1,4 +1,4 @@
-from app.routes import generate, audio
+from app.routes import generate, audio, questions
 
 from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile, Request
 from fastapi.responses import JSONResponse
@@ -42,7 +42,8 @@ async def secure_path(request: Request, call_next):
         token = request.cookies.get('pele-access-token')
         if any(request.url.path.startswith(path) for path in target_paths):
             try:
-                await get_current_user(db, token)
+                user = await get_current_user(db, token)
+                request.state.user = user
             except HTTPException as e:
                 return JSONResponse(status_code=e.status_code, content={"message": e.detail})
         
@@ -56,6 +57,7 @@ async def secure_path(request: Request, call_next):
 # include different routes here
 app.include_router(authRouter, prefix='/auth')
 app.include_router(generate.router)
+app.include_router(questions.router)
 
 
 # Dependency
