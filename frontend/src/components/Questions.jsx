@@ -1,9 +1,15 @@
 import { Button, Typography, Box, Card, CardContent } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useAudioContext } from '../context/AudioContext';
 
 // Used in Record.js
 export default function Questions({ back }) {
+  const { processedAudioResponse } = useAudioContext(); // Access processed audio response
+
+  // Log the processed audio response to check its structure
+  console.log(processedAudioResponse); 
+
   return (
     <Box
       sx={{
@@ -39,10 +45,10 @@ export default function Questions({ back }) {
                   Question {index + 1}
                 </Typography>
                 <Typography variant="body2">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-                  nisi ut aliquip ex ea commodo consequat. 
+                  {/* Safely access the questions key */}
+                  {processedAudioResponse 
+                    ? processedAudioResponse.questions || "No questions available" 
+                    : "Processing audio, please wait..."}
                 </Typography>
               </CardContent>
             </Card>

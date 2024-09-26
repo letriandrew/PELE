@@ -11,6 +11,7 @@ import UserManual from './pages/UserManual';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import { AuthProvider } from './context/AuthContext';
+import { AudioProvider } from './context/AudioContext';
 import PrivateRouteUser from './privateRoutes/privateRouteUser';
 
 function App() {
@@ -22,29 +23,31 @@ function App() {
 
   return (
     <AuthProvider>
-      <Router>
-        <CssBaseline />
-        <ThemeProvider theme={theme}>
-          <NavBar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/aboutUs" element={<AboutUs />} />
-            <Route path="/userManual" element={<UserManual />} />
-            <Route path="/signUp" element={<SignUp />} />
-            <Route path="/signIn" element={<SignIn />} />
+      <AudioProvider>
+        <Router>
+          <CssBaseline />
+          <ThemeProvider theme={theme}>
+            <NavBar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/aboutUs" element={<AboutUs />} />
+              <Route path="/userManual" element={<UserManual />} />
+              <Route path="/signUp" element={<SignUp />} />
+              <Route path="/signIn" element={<SignIn />} />
 
-            <Route 
-              path="/record" 
-              element={
-                <PrivateRouteUser>
-                  <Record />
-                </PrivateRouteUser>
-              } 
-            />
+              <Route 
+                path="/record" 
+                element={
+                  <PrivateRouteUser>
+                    <Record />
+                  </PrivateRouteUser>
+                } 
+              />
 
-          </Routes>
-        </ThemeProvider>
-      </Router>
+            </Routes>
+          </ThemeProvider>
+        </Router>
+      </AudioProvider>
     </AuthProvider>
   );
 }

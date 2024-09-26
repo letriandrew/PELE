@@ -11,6 +11,7 @@ import VolumeIndicator from '../components/VolumeIndicator';
 import RecordButton from '../components/RecordButton';
 import PausePlayButton from '../components/PausePlayButton';
 import PausePlayIndicator from '../components/PausePlayIndicator';
+import { useAudioContext } from '../context/AudioContext';
 
 import axios from 'axios';
 
@@ -22,6 +23,7 @@ const Record = () => {
   const [audioUrl, setAudioUrl] = useState(null);
   const [pause, setPause] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
+  const { setProcessedAudioResponse } = useAudioContext();
 
 
   const audioContextRef = useRef(null);
@@ -146,11 +148,12 @@ const Record = () => {
             'Content-Type': 'multipart/form-data',
           },
         });
-
-        //setProcessedAudioList(response.data); // using react context api, we store the list without needing to serialize
         
         // Handle response (e.g., display the text received from the backend)
         console.log('Response from backend:', response.data);
+
+        // Store the response in context
+        setProcessedAudioResponse(response.data); // Save the backend response
       
       } catch (error) {
         console.error('Error sending audio:', error);
