@@ -12,10 +12,6 @@ from .database.database import SessionLocal, crud, engine
 from .routes.auth import authRouter
 from .service.auth import get_current_user
 
-import io
-from openai import OpenAI
-from app.config import settings
-
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -107,23 +103,8 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 def read_root():
     return {"message": "Welcome!"}
 
-#app.include_router(audio.router)
+app.include_router(audio.router)
 
-@app.post("/process-audio")
-async def process_audio(audio: UploadFile = File(...)):
-    # Save or process the file
-    audio_content = await audio.read()  # Read the content of the uploaded file
 
-    buffer = io.BytesIO(audio_content)
 
-    buffer.name = "test.mp3"
-
-    client = OpenAI()
-    client.api_key = settings.openai_api_key
-
-    transcription =  client.audio.transcriptions.create(
-        model="whisper-1",
-        file=buffer,
-    )
-    return transcription
 

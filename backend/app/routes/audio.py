@@ -1,13 +1,29 @@
 from fastapi import APIRouter, HTTPException, File, UploadFile
-from ..service.process_audio import process_audio_file
+from ..service.audio import create_transcript, produce_questions
+
+from app.config import settings
+import io
 
 router = APIRouter()
 
 @router.post("/process-audio")
-async def process_audio(file: UploadFile = File(...)):
+async def process_audio(audio: UploadFile = File(...)):
     try:
-        transc = await process_audio_file(file)
-        return {"transcription": transc}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        audio_content = await audio.read()  # Read the content of the uploaded file
+
+        buffer = io.BytesIO(audio_content)
+        buffer.name = "test.mp3"
+
+        transcript = create_transcript(buffer)
+        print(transcript)
+
+        #return transcript
+
+        questions_list = produce_questions(transcript)
+        print(questions_list)
+
+        return {"questions": questions_list}
     
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
