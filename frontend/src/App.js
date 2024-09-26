@@ -12,6 +12,7 @@ import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import { AuthProvider } from './context/AuthContext';
 import { AudioProvider } from './context/AudioContext';
+import UserDashboard from './pages/UserDashboard';
 import PrivateRouteUser from './privateRoutes/privateRouteUser';
 
 function App() {
@@ -40,6 +41,15 @@ function App() {
                 element={
                   <PrivateRouteUser>
                     <Record />
+                  </PrivateRouteUser>
+                } 
+              />
+
+              <Route 
+                path="/user-dashboard" 
+                element={
+                  <PrivateRouteUser>
+                    <UserDashboard />
                   </PrivateRouteUser>
                 } 
               />

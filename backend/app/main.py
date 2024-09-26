@@ -1,4 +1,4 @@
-from app.routes import generate, audio, questions
+from app.routes import audio, questions, auth
 
 from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile, Request
 from fastapi.responses import JSONResponse
@@ -9,7 +9,6 @@ from .database import models
 
 from .database import schemas
 from .database.database import SessionLocal, crud, engine
-from .routes.auth import authRouter
 from .service.auth import get_current_user
 
 models.Base.metadata.create_all(bind=engine)
@@ -28,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# middleware to secure all routes starting with "/audio/"
+# middleware to secure all routes starting with 'target_paths'
 @app.middleware("http")
 async def secure_path(request: Request, call_next):
     db = SessionLocal()
@@ -51,9 +50,9 @@ async def secure_path(request: Request, call_next):
 
 
 # include different routes here
-app.include_router(authRouter, prefix='/auth')
-app.include_router(generate.router)
+app.include_router(auth.router, prefix='/auth')
 app.include_router(questions.router, prefix='/questions')
+app.include_router(audio.router)
 
 
 # Dependency
@@ -102,8 +101,6 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 @app.get("/test")
 def read_root():
     return {"message": "Welcome!"}
-
-app.include_router(audio.router)
 
 
 
