@@ -1,8 +1,9 @@
 from sqlalchemy.orm import Session
 from ..database import schemas, models
 from fastapi import HTTPException, status
+from typing import Optional
 
-def save_transcript(db: Session, transcript: str, user_id: int):
+def save_transcript(db: Session, transcript: str, user_id: int, title: Optional[str] = None):
     db_transcript = models.Transcript(transcript=transcript, user_id=user_id)
     db.add(db_transcript)
     db.commit()

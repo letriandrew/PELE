@@ -8,6 +8,7 @@ from typing import Optional
 class QuestionBase(BaseModel):
     question: str
     answer: Optional[str] = None
+    complete: Optional[bool] = False
 
 class QuestionCreate(QuestionBase):
     pass
@@ -24,6 +25,7 @@ class Question(QuestionBase):
 
 class TranscriptBase(BaseModel):
     transcript: str
+    title: Optional[str] = None
 
 class TranscriptCreate(TranscriptBase):
     questions: list[QuestionCreate]

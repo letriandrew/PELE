@@ -1,4 +1,4 @@
-from app.routes import audio, questions, auth
+from app.routes import audio, auth, study_set, question, transcript
 
 from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile, Request
 from fastapi.responses import JSONResponse
@@ -32,7 +32,7 @@ app.add_middleware(
 async def secure_path(request: Request, call_next):
     db = SessionLocal()
     try:
-        target_paths = ["/audio/","/questions/"]
+        target_paths = ["/audio/","/study-set/","/question/","/transcript/"]
 
         token = request.cookies.get('pele-access-token')
         if any(request.url.path.startswith(path) for path in target_paths):
@@ -51,7 +51,9 @@ async def secure_path(request: Request, call_next):
 
 # include different routes here
 app.include_router(auth.router, prefix='/auth')
-app.include_router(questions.router, prefix='/questions')
+app.include_router(study_set.router, prefix='/study-set')
+app.include_router(question.router, prefix='/question')
+app.include_router(transcript.router, prefix='/transcript')
 app.include_router(audio.router)
 
 

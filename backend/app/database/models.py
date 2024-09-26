@@ -33,6 +33,7 @@ class Transcript(Base):
     __tablename__ = "transcripts"
 
     id = Column(Integer, primary_key=True)
+    title = Column(String, index=True, nullable=True)
     transcript = Column(String)
     date_created = Column(DateTime, default = func.now())
     user_id = Column(Integer, ForeignKey("users.id"))
@@ -47,8 +48,9 @@ class Question(Base):
     __tablename__ = "questions"
 
     id = Column(Integer, primary_key=True)
-    question = Column(String, index=True)
-    answer = Column(String, index=True, nullable=True)
+    question = Column(String)
+    answer = Column(String, nullable=True)
+    complete = Column(Boolean, default=False)
     date_created = Column(DateTime, default = func.now())
     transcript_id = Column(Integer, ForeignKey("transcripts.id"))
 
