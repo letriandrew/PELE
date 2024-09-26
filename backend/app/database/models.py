@@ -16,7 +16,7 @@ class User(Base):
 
     items = relationship("Item", back_populates="owner")
 
-    transcripts = relationship("Transcript", back_populates="owner")
+    transcripts = relationship("Transcript", cascade="all,delete", back_populates="owner")
 
 
 class Item(Base):
@@ -33,11 +33,11 @@ class Transcript(Base):
     __tablename__ = "transcripts"
 
     id = Column(Integer, primary_key=True)
-    transcript = Column(String, index=True)
+    transcript = Column(String)
     date_created = Column(DateTime, default = func.now())
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    questions = relationship("Question", back_populates="owner")
+    questions = relationship("Question", cascade="all,delete", back_populates="owner")
 
     owner = relationship("User", back_populates="transcripts")
 

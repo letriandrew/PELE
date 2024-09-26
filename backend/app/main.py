@@ -37,7 +37,7 @@ app.add_middleware(
 async def secure_path(request: Request, call_next):
     db = SessionLocal()
     try:
-        target_paths = ["/audio/"]
+        target_paths = ["/audio/","/questions/"]
 
         token = request.cookies.get('pele-access-token')
         if any(request.url.path.startswith(path) for path in target_paths):
@@ -57,7 +57,7 @@ async def secure_path(request: Request, call_next):
 # include different routes here
 app.include_router(authRouter, prefix='/auth')
 app.include_router(generate.router)
-app.include_router(questions.router)
+app.include_router(questions.router, prefix='/questions')
 
 
 # Dependency

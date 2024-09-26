@@ -26,7 +26,7 @@ class TranscriptBase(BaseModel):
     transcript: str
 
 class TranscriptCreate(TranscriptBase):
-    user_id: int
+    questions: list[QuestionCreate]
 
 class Transcript(TranscriptBase):
     id: int
