@@ -20,6 +20,9 @@ class Question(QuestionBase):
     class Config:
         from_attributes = True
 
+class QuestionHandleComplete(BaseModel):
+    id_list: list[int]
+
 
 # Schema for Transcript
 
@@ -37,7 +40,10 @@ class Transcript(TranscriptBase):
 
     class Config:
         from_attributes = True
-
+    
+class TranscriptTitleChange(BaseModel):
+    id: int
+    title: str
 
 # need to remove this schema
 

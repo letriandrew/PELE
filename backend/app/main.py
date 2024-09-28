@@ -11,13 +11,15 @@ from .database import schemas
 from .database.database import SessionLocal, engine
 from .database import crud
 from .service.auth import get_current_user
+from starlette.status import HTTP_204_NO_CONTENT
+from starlette.responses import Response
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",
+    "http://localhost:3000"
 ]
 
 app.add_middleware(
@@ -31,16 +33,30 @@ app.add_middleware(
 # middleware to secure all routes starting with 'target_paths'
 @app.middleware("http")
 async def secure_path(request: Request, call_next):
+    if request.method == "OPTIONS":
+        print(f"OPTIONS request for {request.url.path}")
+
+        # Create a response with a 204 status code and necessary CORS headers
+        response = Response(status_code=HTTP_204_NO_CONTENT)
+        response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "GET,POST,PATCH,OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
+            
+        return response
+
     db = SessionLocal()
     try:
         target_paths = ["/audio/","/study-set/","/question/","/transcript/"]
 
         token = request.cookies.get('pele-access-token')
+        print(request.headers)
         if any(request.url.path.startswith(path) for path in target_paths):
             try:
                 user = await get_current_user(db, token)
                 request.state.user = user
             except HTTPException as e:
+                print("HERE")
                 return JSONResponse(status_code=e.status_code, content={"message": e.detail})
         
         response = await call_next(request)

@@ -34,7 +34,7 @@ function NavBar() {
   }]];
 
   React.useEffect(() =>{
-    if(JSON.parse(sessionStorage.getItem('user'))){
+    if(auth.user){
       setPages([['Record!', '/record'], ['Dashboard','/user-dashboard'], ['User Manual', '/userManual'], ['About Us', '/aboutUs']])
     }
     else{

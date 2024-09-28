@@ -10,6 +10,7 @@ function UserDashboard() {
   const [page, setPage] = useState(true); // true is the user dash
   const [sets, setSets] = useState([]);
   const [selectedSet, setSelectedSet] = useState(null);
+  const [done, setDone] = useState(true)
 
   useEffect(() => {
     const retrieveSets =async()=>{
@@ -20,9 +21,13 @@ function UserDashboard() {
       }
     }
     retrieveSets()
-  }, []);
+  }, [done]);
 
-  const handlePageChange = () => {
+  const handleDone =async()=>{
+    setDone(!done)
+  }
+
+  const handlePageChange =async () => {
     setPage(!page)
   }
 
@@ -130,7 +135,7 @@ function UserDashboard() {
       </Box>
     </Container>
     :
-    <QuestionsUserDashboard back = {handlePageChange} set = {selectedSet}/>
+    <QuestionsUserDashboard back = {handlePageChange} set = {selectedSet} handleDone={handleDone}/>
     }
     </>
   );

@@ -3,19 +3,50 @@ import Grid from '@mui/material/Grid2';
 import CssBaseline from '@mui/material/CssBaseline';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { handleQuestionComplete } from '../apiService';
+
 
 // Used in Record.js
-export default function QuestionsUserDashboard({ back, set }) {
+export default function QuestionsUserDashboard({ back, set, handleDone }) {
 
     const [checked, setChecked] = useState(Array(set.questions.length).fill(false));
+    const [handle, setHandle] = useState(Array(set.questions.length).fill(false));
 
-    // Handle the toggle between checked and unchecked
+    useEffect(() => {
+        const newChecked = []
+        for (let i = 0; i < set.questions.length; i++) {
+            newChecked.push(set.questions[i].complete)
+        }
+        setChecked(newChecked)
+    
+    }, []);
+
+
     const handleCheck = (index) => {
         const newChecked = [...checked];
-        newChecked[index] = !newChecked[index];  // Toggle the check state
+        newChecked[index] = !newChecked[index];
         setChecked(newChecked);
+
+        const newhandle = [...handle];
+        newhandle[index] = !newhandle[index];
+        setHandle(newhandle);
     };
+
+    const handleRequest = async() => {
+        const id_list = []
+        for(let i = 0; i < handle.length; i++){
+            if(handle[i]){
+                id_list.push(set.questions[i].id)
+            }
+        }
+        if(id_list.length > 0){
+            console.log(id_list)
+            const response = await handleQuestionComplete(id_list)
+            console.log(response)
+            handleDone()
+        }
+    }
 
     return (
         <Box
@@ -81,11 +112,14 @@ export default function QuestionsUserDashboard({ back, set }) {
                                     marginTop: 'auto'  // Push the icon to the bottom of the card content
                                 }}
                             >
-                                <IconButton onClick={() => handleCheck(index)}>
+                                <IconButton
+                                    onClick={() =>
+                                        handleCheck(index)
+                                    }>
                                     {checked[index] ? (
-                                        <CheckCircleIcon color="success" />  // Filled checkmark if checked
+                                        <CheckCircleIcon color="success" sx={{ fontSize: 30 }} />  // Filled checkmark if checked
                                     ) : (
-                                        <CheckCircleOutlineIcon />  // Outlined checkmark if not checked
+                                        <CheckCircleOutlineIcon sx={{ fontSize: 30 }} />  // Outlined checkmark if not checked
                                     )}
                                 </IconButton>
                             </Box>
@@ -104,7 +138,10 @@ export default function QuestionsUserDashboard({ back, set }) {
                             background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
                         },
                     }}
-                    onClick={back}
+                    onClick={() => {
+                        handleRequest()
+                        back()
+                    }}
                 >
                     <Typography fontWeight={550}>Back To Dashboard</Typography>
                 </Button>
