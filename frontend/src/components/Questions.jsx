@@ -7,8 +7,8 @@ import { useAudioContext } from '../context/AudioContext';
 export default function Questions({ back }) {
   const { processedAudioResponse } = useAudioContext(); // Access processed audio response
 
-  // Log the processed audio response to check its structure
-  console.log(processedAudioResponse); 
+  // Safely access the list of questions from processedAudioResponse
+  const questions = processedAudioResponse?.questions || [];
 
   return (
     <Box
@@ -25,35 +25,39 @@ export default function Questions({ back }) {
       <CssBaseline />
 
       <Grid container spacing={2} sx={{ marginTop: 5, width: '80%' }}>
-        {[...Array(10)].map((_, index) => (
-          <Grid
-            key={index}
-            size={{
-              xs: 12, md: 2.4
-            }}
-          >
-            <Card
-              sx={{
-                transition: 'transform 0.3s ease-in-out', // Smooth transition
-                '&:hover': {
-                  transform: 'scale(1.1)', // Slightly expand the card
-                },
-              }}
+        {questions.length > 0 ? (
+          questions.map((question, index) => (
+            <Grid
+              key={index}
+              item // Use `item` for individual grid items
+              xs={12} md={4}  // Adjusted grid size for better card layout
             >
-              <CardContent>
-                <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
-                  Question {index + 1}
-                </Typography>
-                <Typography variant="body2">
-                  {/* Safely access the questions key */}
-                  {processedAudioResponse 
-                    ? processedAudioResponse.questions || "No questions available" 
-                    : "Processing audio, please wait..."}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
+              <Card
+                sx={{
+                  transition: 'transform 0.3s ease-in-out', // Smooth transition
+                  '&:hover': {
+                    transform: 'scale(1.1)', // Slightly expand the card on hover
+                  },
+                }}
+              >
+                <CardContent>
+                  <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+                    Question {index + 1}
+                  </Typography>
+                  <Typography variant="body2">
+                    {question} {/* Render each question separately */}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))
+        ) : (
+          <Typography variant="body2">
+            {processedAudioResponse
+              ? "No questions available"
+              : "Processing audio, please wait..."}
+          </Typography>
+        )}
       </Grid>
 
       <Box sx={{ padding: '50px' }}>

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, File, UploadFile
-from ..service.audio import create_transcript, produce_questions
+from ..service.audio import create_transcript, produce_questions, string_to_list
 
 from app.config import settings
 import io
@@ -15,12 +15,18 @@ async def process_audio(audio: UploadFile = File(...)):
         buffer.name = "test.mp3"
 
         transcript = create_transcript(buffer)
-        print(transcript)
 
         #return transcript
 
         questions_list = produce_questions(transcript)
-        print(questions_list)
+        #print(questions_list)
+        
+        questions_list = string_to_list(questions_list)
+
+
+        for i in questions_list:
+            print(i)
+
 
         return {"questions": questions_list}
     
