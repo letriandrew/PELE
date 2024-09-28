@@ -40,7 +40,7 @@ async def secure_path(request: Request, call_next):
         response = Response(status_code=HTTP_204_NO_CONTENT)
         response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
         response.headers["Access-Control-Allow-Credentials"] = "true"
-        response.headers["Access-Control-Allow-Methods"] = "GET,POST,PATCH,OPTIONS"
+        response.headers["Access-Control-Allow-Methods"] = "GET,POST,DELETE,PUT,PATCH,OPTIONS"
         response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
             
         return response
