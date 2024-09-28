@@ -8,7 +8,8 @@ from sqlalchemy.orm import Session
 from .database import models
 
 from .database import schemas
-from .database.database import SessionLocal, crud, engine
+from .database.database import SessionLocal, engine
+from .database import crud
 from .service.auth import get_current_user
 
 models.Base.metadata.create_all(bind=engine)

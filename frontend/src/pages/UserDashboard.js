@@ -1,41 +1,70 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Box, Tabs, Tab, Typography, Container, CssBaseline, Card, CardContent, LinearProgress } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import PendingIcon from '@mui/icons-material/Pending';
+import { getStudySets } from '../apiService';
+import QuestionsUserDashboard from '../components/QuestionsUserDashboard';
 
 function UserDashboard() {
   const [value, setValue] = useState(0);
+  const [page, setPage] = useState(true); // true is the user dash
+  const [sets, setSets] = useState([]);
+  const [selectedSet, setSelectedSet] = useState(null);
+
+  useEffect(() => {
+    const retrieveSets =async()=>{
+      const response = await getStudySets()
+      console.log(response.data.transcripts)
+      if (response.status === 200){
+        setSets(response.data.transcripts)
+      }
+    }
+    retrieveSets()
+  }, []);
+
+  const handlePageChange = () => {
+    setPage(!page)
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const handleCardClick = (i) => {
+    setSelectedSet(sets[i])
+  };
+
   const renderQuestionSets = () => {
     const questionSets = [];
     
-    // Simulate different progress for each question set
     const progressData = [20, 45, 75, 50, 90, 60, 30, 85, 40, 70];
     
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 0; i < sets.length; i++) {
       questionSets.push(
         <Grid size={{md : 4, xs : 12}} key={i}>
-            <Card variant="outlined" sx={{ 
-                transition: 'transform 0.3s ease-in-out', // Smooth transition
+            <Card 
+              variant="outlined"
+              onClick={()=>{
+                handlePageChange()
+                handleCardClick(i)
+              }} 
+              sx={{ 
+                transition: 'transform 0.3s ease-in-out', 
                 '&:hover': {
-                  transform: 'scale(1.1)', // Slightly expand the card
+                  transform: 'scale(1.1)', 
                 },
                 width: '100%', 
                 height: 200, 
                 borderRadius: 10, 
                 marginBottom: 5 
-            }}>
+              }}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
-              <Typography variant="h6">Question Set {i}</Typography>
+              <Typography variant="h6">{sets[i].title}</Typography>
 
-              {/* Centered Progress bar and percentage */}
+              
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2 }}>
                 <Typography variant="body21" sx={{ mr: 2 }}>
-                  {`${progressData[i - 1]}%`}
+                  {`${progressData[i]}%`}
                 </Typography>
                 <Box sx={{ width: '20%' }}>
                     <LinearProgress 
@@ -48,7 +77,7 @@ function UserDashboard() {
                             }
                         }}
                         variant="determinate" 
-                        value={progressData[i - 1]} 
+                        value={progressData[i]} 
                     />
                 </Box>
               </Box>
@@ -61,6 +90,8 @@ function UserDashboard() {
   };
 
   return (
+    <>
+    { page ?
     <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 25 }}>
       <CssBaseline />
       <Avatar sx={{ width: 120, height: 120, mb: 3 }} />
@@ -98,6 +129,10 @@ function UserDashboard() {
         )}
       </Box>
     </Container>
+    :
+    <QuestionsUserDashboard back = {handlePageChange} set = {selectedSet}/>
+    }
+    </>
   );
 }
 

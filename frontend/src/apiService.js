@@ -58,4 +58,14 @@ async function verifyToken(){
     }
 }
 
-export {signUpUser, signInUser, signOutUser, verifyToken}
+async function getStudySets(){
+    try {
+        const response = await apiService.get('/study-set/get-sets')
+        return response
+    } catch (error) {
+        console.error("Error Retrieving study sets:", error);
+        return error;
+    }
+}
+
+export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets}
