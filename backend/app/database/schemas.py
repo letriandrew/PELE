@@ -8,6 +8,7 @@ from typing import Optional
 class QuestionBase(BaseModel):
     question: str
     answer: Optional[str] = None
+    complete: Optional[bool] = False
 
 class QuestionCreate(QuestionBase):
     pass
@@ -19,11 +20,15 @@ class Question(QuestionBase):
     class Config:
         from_attributes = True
 
+class QuestionHandleComplete(BaseModel):
+    id_list: list[int]
+
 
 # Schema for Transcript
 
 class TranscriptBase(BaseModel):
     transcript: str
+    title: Optional[str] = None
 
 class TranscriptCreate(TranscriptBase):
     questions: list[QuestionCreate]
@@ -35,7 +40,10 @@ class Transcript(TranscriptBase):
 
     class Config:
         from_attributes = True
-
+    
+class TranscriptTitleChange(BaseModel):
+    id: int
+    title: str
 
 # need to remove this schema
 

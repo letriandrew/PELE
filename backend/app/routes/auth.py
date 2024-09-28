@@ -12,9 +12,9 @@ def get_db():
     finally:
         db.close()
 
-authRouter = APIRouter()
+router = APIRouter()
 
-@authRouter.post("/login")
+@router.post("/login")
 async def login_for_access_token(
     user: schemas.UserLogin, 
     response: Response, 
@@ -53,12 +53,12 @@ async def login_for_access_token(
         "name": foundUser.name
     }
 
-@authRouter.get("/logout")
+@router.get("/logout")
 async def logout(response: Response):
     response.delete_cookie("pele-access-token")
     return {"message":"successfully logged out"}
 
-@authRouter.get("/verifyToken")
+@router.get("/verifyToken")
 async def logout(token: str = Cookie(alias="pele-access-token"), db: Session = Depends(get_db)):
     await auth.get_current_user(db, token)
     return {"message":"successfully verified"}

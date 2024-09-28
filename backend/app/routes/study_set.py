@@ -13,7 +13,7 @@ def get_db():
 
 router = APIRouter()
 
-@router.post("/save-questions")
+@router.post("/save-set")
 async def save_questions(
     request: Request,
     transcript: schemas.TranscriptCreate, 
@@ -21,7 +21,7 @@ async def save_questions(
 ):
     
     user_id = request.state.user.id
-    res_transcript = transcript_service.save_transcript(db,transcript.transcript,user_id)
+    res_transcript = transcript_service.save_transcript(db,transcript.transcript,user_id,transcript.title)
     
     if not res_transcript:
         raise HTTPException(status_code=500, detail="Database save failed")
@@ -33,12 +33,13 @@ async def save_questions(
         
     return {"message": "Save successful"}
 
-@router.get("/get-questions",response_model=schemas.User)
+@router.get("/get-sets",response_model=schemas.User)
 async def get_questions(request: Request, db: Session = Depends(get_db)):
     user_id = request.state.user.id
     return transcript_service.get_transcripts(db,user_id)
 
-@router.delete("/delete-transcript/{id}")
+# deletes transcript and all questions related to it
+@router.delete("/delete-set/{id}")
 async def delete_transcript(request: Request, id: int, db: Session = Depends(get_db)):
     user_id = request.state.user.id
     res = transcript_service.delete_transcript(db,id,user_id)

@@ -8,7 +8,7 @@ const apiService = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
-    "withCredentials": true // added for when we get to the jwt usage with cookies
+    withCredentials: true // added for when we get to the jwt usage with cookies
 });
 
 async function signUpUser(body){
@@ -58,4 +58,26 @@ async function verifyToken(){
     }
 }
 
-export {signUpUser, signInUser, signOutUser, verifyToken}
+async function getStudySets(){
+    try {
+        const response = await apiService.get('/study-set/get-sets')
+        return response
+    } catch (error) {
+        console.error("Error Retrieving study sets:", error);
+        return error;
+    }
+}
+
+async function handleQuestionComplete(new_id_list){
+    try {
+        const response = await apiService.patch('/question/handle-complete',{
+            id_list: new_id_list
+        })
+        return response
+    } catch (error) {
+        console.error("Error updating question completion status:", error);
+        return error;
+    }
+}
+
+export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete}

@@ -19,8 +19,7 @@ import { signOutUser } from '../apiService';
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [pages,setPages] = React.useState([['Sign Up', '/signUp'],['Sign In','/signIn'],['About Us', '/aboutUs']])
-  const [user, setUser] = React.useState(true)   // will change later to accomidate auth context provider
+  const [pages,setPages] = React.useState([])
 
   const authDispatch = React.useContext(AuthDispatchContext)
   const auth = React.useContext(AuthContext)
@@ -35,8 +34,8 @@ function NavBar() {
   }]];
 
   React.useEffect(() =>{
-    if(JSON.parse(sessionStorage.getItem('user'))){
-      setPages([['Record!', '/record'], ['User Manual', '/userManual'], ['About Us', '/aboutUs']])
+    if(auth.user){
+      setPages([['Record!', '/record'], ['Dashboard','/user-dashboard'], ['User Manual', '/userManual'], ['About Us', '/aboutUs']])
     }
     else{
       setPages([['Sign Up', '/signUp'],['Sign In','/signIn'],['About Us', '/aboutUs']])
