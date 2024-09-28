@@ -43,7 +43,6 @@ export default function QuestionsUserDashboard({ back, set, handleDone }) {
         if(id_list.length > 0){
             console.log(id_list)
             const response = await handleQuestionComplete(id_list)
-            console.log(response)
             handleDone()
         }
     }

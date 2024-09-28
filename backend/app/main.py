@@ -36,7 +36,6 @@ async def secure_path(request: Request, call_next):
     if request.method == "OPTIONS":
         print(f"OPTIONS request for {request.url.path}")
 
-        # Create a response with a 204 status code and necessary CORS headers
         response = Response(status_code=HTTP_204_NO_CONTENT)
         response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
         response.headers["Access-Control-Allow-Credentials"] = "true"
@@ -50,7 +49,7 @@ async def secure_path(request: Request, call_next):
         target_paths = ["/audio/","/study-set/","/question/","/transcript/"]
 
         token = request.cookies.get('pele-access-token')
-        print(request.headers)
+        
         if any(request.url.path.startswith(path) for path in target_paths):
             try:
                 user = await get_current_user(db, token)

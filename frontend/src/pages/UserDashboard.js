@@ -15,7 +15,6 @@ function UserDashboard() {
   useEffect(() => {
     const retrieveSets =async()=>{
       const response = await getStudySets()
-      console.log(response.data.transcripts)
       if (response.status === 200){
         setSets(response.data.transcripts)
       }
@@ -42,7 +41,18 @@ function UserDashboard() {
   const renderQuestionSets = () => {
     const questionSets = [];
     
-    const progressData = [20, 45, 75, 50, 90, 60, 30, 85, 40, 70];
+    const progressData = [];
+  
+
+    for (let i = 0; i < sets.length; i++){
+      let complete = 0
+      for (let j = 0; j < sets[i].questions.length; j++){
+        if(sets[i].questions[j].complete){
+          complete++
+        }
+      }
+      progressData.push(Math.round((complete/sets[i].questions.length)*100))
+    }
     
     for (let i = 0; i < sets.length; i++) {
       questionSets.push(

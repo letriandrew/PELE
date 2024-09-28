@@ -27,7 +27,7 @@ async def save_questions(
         raise HTTPException(status_code=500, detail="Database save failed")
     
     for i in transcript.questions:
-        res_question = question_service.save_question(db,i,res_transcript.id)
+        res_question = question_service.save_question(db,i,res_transcript.id,user_id)
         if not res_question:
             raise HTTPException(status_code=500, detail="Database save failed")
         
