@@ -1,66 +1,114 @@
-import { Button, Typography, Box, Card, CardContent } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import { Button, Typography, Box, Card, CardContent, Avatar } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useState } from 'react';
 import { useAudioContext } from '../context/AudioContext';
+import SaveSetDialog from './SaveSetDialog'; // Import the Dialog component
+import {saveStudySet} from '../apiService'
 
-// Used in Record.js
 export default function Questions({ back }) {
-  const { processedAudioResponse } = useAudioContext(); // Access processed audio response
-
-  // Safely access the list of questions from processedAudioResponse
+  const { processedAudioResponse } = useAudioContext();
   const questions = processedAudioResponse?.questions || [];
+  const transcript = processedAudioResponse?.transcript || null;
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [setTitle, setSetTitle] = useState(''); // State for the set title
+
+  const handleDialogOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
+
+  const handleSave = async(title) => {
+    setSetTitle(title); 
+    const response = await saveStudySet(title, processedAudioResponse.transcript, processedAudioResponse.questions)
+    console.log(response)
+    if(response.status === 200){
+      // do stuff here
+    }
+    else{
+      // do other stuff here
+    }
+  };
 
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         paddingTop: '100px',
-        paddingBottom: '100px',
         minHeight: '100vh',
       }}
     >
       <CssBaseline />
 
-      <Grid container spacing={2} sx={{ marginTop: 5, width: '80%' }}>
-        {questions.length > 0 ? (
-          questions.map((question, index) => (
-            <Grid
-              key={index}
-              item // Use `item` for individual grid items
-              xs={12} md={4}  // Adjusted grid size for better card layout
+      <Box sx={{ flexGrow: 1, width: '60%', display: 'flex', justifyContent: 'center' }}>
+        <Box container spacing={2} sx={{ mt: 10 }}>
+          {transcript && (
+            <Card
+              sx={{
+                mb: 3,
+                display: 'block',
+                width: 'fit-content',
+                maxWidth: '100%',
+                justifyContent: 'right',
+                backgroundColor: '#2f2e44',
+              }}
             >
+              <CardContent>
+                <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+                  Your Transcript
+                </Typography>
+                <Typography variant="body2">{transcript}</Typography>
+              </CardContent>
+            </Card>
+          )}
+
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, mt: 6 }}>
+            <Avatar sx={{ width: 30, height: 30 }} />
+            <Typography variant="body2" sx={{ marginLeft: 1 }}>
+              PELE Bot
+            </Typography>
+          </Box>
+
+          {questions.length > 0 ? (
+            questions.map((question, index) => (
               <Card
+                key={index}
                 sx={{
-                  transition: 'transform 0.3s ease-in-out', // Smooth transition
+                  transition: 'transform 0.3s ease-in-out',
                   '&:hover': {
-                    transform: 'scale(1.1)', // Slightly expand the card on hover
+                    transform: 'scale(1.1)',
                   },
+                  mb: 3,
+                  ml: 1,
+                  display: 'block',
+                  width: 'fit-content',
+                  maxWidth: '100%',
                 }}
               >
                 <CardContent>
                   <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
                     Question {index + 1}
                   </Typography>
-                  <Typography variant="body2">
-                    {question} {/* Render each question separately */}
-                  </Typography>
+                  <Typography variant="body2">{question}</Typography>
                 </CardContent>
               </Card>
-            </Grid>
-          ))
-        ) : (
-          <Typography variant="body2">
-            {processedAudioResponse
-              ? "No questions available"
-              : "Processing audio, please wait..."}
-          </Typography>
-        )}
-      </Grid>
+            ))
+          ) : (
+            <Typography variant="body2">
+              {processedAudioResponse ? 'No questions available' : 'Processing audio, please wait...'}
+            </Typography>
+          )}
+        </Box>
+      </Box>
 
-      <Box sx={{ padding: '50px' }}>
+      {/* Button Section */}
+      <Box sx={{ width: '100%', textAlign: 'center', pb: 5, mt: 5 }}>
         <Button
           variant="contained"
           sx={{
@@ -69,12 +117,30 @@ export default function Questions({ back }) {
             '&:hover': {
               background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
             },
+            mr: 2,
           }}
           onClick={back}
         >
           <Typography fontWeight={550}>Back To Recording</Typography>
         </Button>
+
+        <Button
+          variant="contained"
+          sx={{
+            background: 'linear-gradient(45deg, #3A394E 30%, #4d4c70 90%)',
+            color: 'white',
+            '&:hover': {
+              background: 'linear-gradient(45deg, #4d4c70 30%, #3A394E 90%)',
+            },
+          }}
+          onClick={handleDialogOpen} // Open the dialog on click
+        >
+          <Typography fontWeight={550}>Save Set</Typography>
+        </Button>
       </Box>
+
+      {/* Dialog Component */}
+      <SaveSetDialog open={openDialog} handleClose={handleDialogClose} handleSave={handleSave} />
     </Box>
   );
 }
