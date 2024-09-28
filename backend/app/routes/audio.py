@@ -28,7 +28,10 @@ async def process_audio(audio: UploadFile = File(...)):
             print(i)
 
 
-        return {"questions": questions_list}
+        return {
+            "transcript": transcript,
+            "questions": questions_list
+            }
     
     except Exception as e:
         print(f"Error: {e}")

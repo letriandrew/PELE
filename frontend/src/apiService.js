@@ -80,4 +80,22 @@ async function handleQuestionComplete(new_id_list){
     }
 }
 
-export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete}
+async function saveStudySet(new_title, new_transcript, new_questions) {
+    try {
+        const formattedQuestions = new_questions.map(question => ({ question }));
+
+        const response = await apiService.post('/study-set/save-set', {
+            title: new_title,
+            transcript: new_transcript,
+            questions: formattedQuestions
+        });
+
+        return response;
+    } catch (error) {
+        console.error("Error saving study set:", error);
+        return error;
+    }
+}
+
+
+export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete, saveStudySet}
