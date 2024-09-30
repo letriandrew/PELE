@@ -14,6 +14,7 @@ def get_db():
 
 router = APIRouter()
 
+# route handler to authenticate and login user
 @router.post("/login")
 async def login_for_access_token(
     user: schemas.UserLogin, 
@@ -53,11 +54,13 @@ async def login_for_access_token(
         "name": foundUser.name
     }
 
+# route handler to logout user
 @router.get("/logout")
 async def logout(response: Response):
     response.delete_cookie("pele-access-token")
     return {"message":"successfully logged out"}
 
+# verify a user's token and retrieve the user based off the token from the db
 @router.get("/verifyToken")
 async def logout(token: str = Cookie(alias="pele-access-token"), db: Session = Depends(get_db)):
     await auth.get_current_user(db, token)

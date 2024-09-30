@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from ..service import question_service, transcript_service
 from ..database.database import SessionLocal
 
+# create a db session and yield to caller while ensuring sesion close when caller is done using
 def get_db():
     db = SessionLocal()
     try:

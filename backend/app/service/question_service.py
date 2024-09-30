@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from ..database import schemas, models
 from fastapi import HTTPException, status
 
+# save generated questions to db
 def save_question(db: Session, question: schemas.QuestionCreate, transcript_id: int, user_id: int):
     db_question = models.Question(question = question.question, answer = question.answer, transcript_id = transcript_id, complete = question.complete)
     db.add(db_question)
@@ -9,6 +10,7 @@ def save_question(db: Session, question: schemas.QuestionCreate, transcript_id: 
     db.refresh(db_question)
     return db_question
 
+# delete generatad question from db
 def delete_question(db: Session, id: int, user_id: int):
     db_question = db.query(models.Question).filter(models.Question.id == id).first()
     db_transcript = db.query(models.Transcript).filter(models.Transcript.id == db_question.transcript_id).first()
@@ -33,6 +35,7 @@ def delete_question(db: Session, id: int, user_id: int):
 
     return db_question  
 
+# mark question status/completion in the db
 def handle_complete(db: Session, id: int, user_id: int):
     db_question = db.query(models.Question).filter(models.Question.id == id).first()
     db_transcript = db.query(models.Transcript).filter(models.Transcript.id == db_question.transcript_id).first()

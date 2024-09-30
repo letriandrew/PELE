@@ -9,6 +9,7 @@ import re
 
 openai.api_key = settings.openai_api_key
 
+# This function takes in raw byte data and run it through openai whisper to transcribe and return a transcript string of the audio
 def create_transcript(buffer: BytesIO) -> str:
     transcription =  openai.Audio.transcribe(
         model="whisper-1",
@@ -16,6 +17,7 @@ def create_transcript(buffer: BytesIO) -> str:
     )
     return transcription['text']
 
+# This function's purpose is, through prompt engineering, create an ___ amount of questions from gpt 3.5 api based off the transcript that it takes in
 def produce_questions(transcript: str) -> str:
     response = openai.ChatCompletion.create(model="gpt-3.5-turbo",
     messages=[{
@@ -29,6 +31,7 @@ def produce_questions(transcript: str) -> str:
 
     return response['choices'][0]['message']['content']
 
+# This function's purpose is to read through the gpt 3.5 response and store each of the questions in a respective index within a list while using regex to remove leading numbers and text that is not relevant
 def string_to_list(string: str) -> List[str]:
     # Split the string by lines to seperate questions
     lines = string.split('\n') 
