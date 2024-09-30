@@ -3,15 +3,20 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useState } from 'react';
 import { useAudioContext } from '../context/AudioContext';
 import SaveSetDialog from './SaveSetDialog'; // Import the Dialog component
-import {saveStudySet} from '../apiService'
+import { saveStudySet } from '../apiService'
+import Notification from './Notification';
 
-export default function Questions({ back }) {
+export default function Questions({ handleDelete, handlePage }) {
   const { processedAudioResponse } = useAudioContext();
   const questions = processedAudioResponse?.questions || [];
   const transcript = processedAudioResponse?.transcript || null;
 
   const [openDialog, setOpenDialog] = useState(false);
   const [setTitle, setSetTitle] = useState(''); // State for the set title
+  const [notification, setNotification] = useState(false)
+  const [notificationMessage, setNotificationMessage] = useState("")
+  const [notificationStatus, setNotificationStatus] = useState(null)
+  const [saved, setSaved] = useState(false)
 
   const handleDialogOpen = () => {
     setOpenDialog(true);
@@ -21,16 +26,28 @@ export default function Questions({ back }) {
     setOpenDialog(false);
   };
 
-  const handleSave = async(title) => {
-    setSetTitle(title); 
-    const response = await saveStudySet(title, processedAudioResponse.transcript, processedAudioResponse.questions)
-    console.log(response)
-    if(response.status === 200){
-      // do stuff here
+  const handleCloseNotification =()=>{
+    setNotification(false)
+  }
+
+  const handleOpenNotification =()=>{
+    setNotification(true)
+  }
+
+  const handleSave = async (title) => {
+    setSetTitle(title);
+    const response = await saveStudySet(title, processedAudioResponse.transcript, processedAudioResponse.questions);
+    console.log(response);
+    if (response.status === 200) {
+      setNotificationStatus(true)
+      setNotificationMessage("Study set saved to dashboard")
+      setSaved(true)
     }
-    else{
-      // do other stuff here
+    else {
+      setNotificationStatus(false)
+      setNotificationMessage("Failed to save study set")
     }
+    handleOpenNotification();
   };
 
   return (
@@ -76,29 +93,69 @@ export default function Questions({ back }) {
           </Box>
 
           {questions.length > 0 ? (
-            questions.map((question, index) => (
-              <Card
-                key={index}
-                sx={{
-                  transition: 'transform 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'scale(1.1)',
-                  },
-                  mb: 3,
-                  ml: 1,
-                  display: 'block',
-                  width: 'fit-content',
-                  maxWidth: '100%',
-                }}
-              >
-                <CardContent>
-                  <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
-                    Question {index + 1}
-                  </Typography>
-                  <Typography variant="body2">{question}</Typography>
-                </CardContent>
-              </Card>
-            ))
+            <>
+              {
+                questions.map((question, index) => (
+                  <Card
+                    key={index}
+                    sx={{
+                      transition: 'transform 0.3s ease-in-out',
+                      '&:hover': {
+                        transform: 'scale(1.1)',
+                      },
+                      mb: 3,
+                      ml: 1,
+                      display: 'block',
+                      width: 'fit-content',
+                      maxWidth: '100%',
+                    }}
+                  >
+                    <CardContent>
+                      <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+                        Question {index + 1}
+                      </Typography>
+                      <Typography variant="body2">{question}</Typography>
+                    </CardContent>
+                  </Card>
+                ))
+              }
+              <Box sx={{ width: '100%', textAlign: 'center', pb: 5, mt: 5 }}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+                    color: 'white',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
+                    },
+                    mr: 2,
+                  }}
+                  onClick={() => {
+                    handleDelete()
+                    handlePage(0)
+                  }}
+                >
+                  <Typography fontWeight={550}>Back To Recording</Typography>
+                </Button>
+
+                <Button
+                  variant="contained"
+                  disabled={saved}
+                  sx={{
+                    background: 'linear-gradient(45deg, #3A394E 30%, #4d4c70 90%)',
+                    color: 'white',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #4d4c70 30%, #3A394E 90%)',
+                    },
+                  }}
+                  onClick={handleDialogOpen} // Open the dialog on click
+                >
+                  <Typography fontWeight={550}>Save As Study Set</Typography>
+                </Button>
+              </Box>
+            </>
+
+
           ) : (
             <Typography variant="body2">
               {processedAudioResponse ? 'No questions available' : 'Processing audio, please wait...'}
@@ -107,40 +164,11 @@ export default function Questions({ back }) {
         </Box>
       </Box>
 
-      {/* Button Section */}
-      <Box sx={{ width: '100%', textAlign: 'center', pb: 5, mt: 5 }}>
-        <Button
-          variant="contained"
-          sx={{
-            background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-            color: 'white',
-            '&:hover': {
-              background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
-            },
-            mr: 2,
-          }}
-          onClick={back}
-        >
-          <Typography fontWeight={550}>Back To Recording</Typography>
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{
-            background: 'linear-gradient(45deg, #3A394E 30%, #4d4c70 90%)',
-            color: 'white',
-            '&:hover': {
-              background: 'linear-gradient(45deg, #4d4c70 30%, #3A394E 90%)',
-            },
-          }}
-          onClick={handleDialogOpen} // Open the dialog on click
-        >
-          <Typography fontWeight={550}>Save Set</Typography>
-        </Button>
-      </Box>
-
       {/* Dialog Component */}
       <SaveSetDialog open={openDialog} handleClose={handleDialogClose} handleSave={handleSave} />
+      {notification &&
+        <Notification message={notificationMessage} status={notificationStatus} close={handleCloseNotification}/>
+      }
     </Box>
   );
 }

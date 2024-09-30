@@ -15,7 +15,7 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { GoogleIcon } from '../components/CustomIcons';
 import { signUpUser } from '../apiService';
-import AccountCreationNotification from '../components/AccountCreationNotification';
+import Notification from '../components/Notification';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -234,7 +234,7 @@ export default function SignUp() {
               </Box>
             </Card>
             { notification &&
-            <AccountCreationNotification status = {notificationStatus} close = {handleCloseNotification}/>
+            <Notification message = {notificationStatus ? "Account Creation Success" : "Account Creation Failure"} status = {notificationStatus} close = {handleCloseNotification}/>
             }
           </Stack>
         </>

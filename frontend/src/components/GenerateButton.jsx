@@ -2,12 +2,15 @@ import { Button, Typography } from "@mui/material"
 
 
 // Used in Record.js
-export default function ({handleGenerate,audioUrl}) {
+export default function ({handlePage, handleGenerate, audioUrl}) {
     return (
         <Button
             variant="contained"
             disabled={audioUrl === null}
-            onClick={handleGenerate}
+            onClick={async ()=>{
+                handlePage(1)
+                await handleGenerate()
+            }}
             sx={{
                 opacity: audioUrl === null ? 0.5 : 1,
                 disabled: audioUrl === null,

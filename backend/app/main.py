@@ -46,7 +46,7 @@ async def secure_path(request: Request, call_next):
 
     db = SessionLocal()
     try:
-        target_paths = ["/audio/","/study-set/","/question/","/transcript/"]
+        target_paths = ["/gen/", "/study-set/","/question/","/transcript/"]
 
         token = request.cookies.get('pele-access-token')
         
@@ -55,7 +55,6 @@ async def secure_path(request: Request, call_next):
                 user = await get_current_user(db, token)
                 request.state.user = user
             except HTTPException as e:
-                print("HERE")
                 return JSONResponse(status_code=e.status_code, content={"message": e.detail})
         
         response = await call_next(request)
@@ -70,7 +69,7 @@ app.include_router(auth.router, prefix='/auth')
 app.include_router(study_set.router, prefix='/study-set')
 app.include_router(question.router, prefix='/question')
 app.include_router(transcript.router, prefix='/transcript')
-app.include_router(audio.router)
+app.include_router(audio.router , prefix='/gen')
 
 
 # Dependency

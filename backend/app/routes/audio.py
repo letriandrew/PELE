@@ -19,13 +19,8 @@ async def process_audio(audio: UploadFile = File(...)):
         #return transcript
 
         questions_list = produce_questions(transcript)
-        #print(questions_list)
         
         questions_list = string_to_list(questions_list)
-
-
-        for i in questions_list:
-            print(i)
 
 
         return {

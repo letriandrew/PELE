@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { handleQuestionComplete } from '../apiService';
 
 
+
 // Used in Record.js
 export default function QuestionsUserDashboard({ back, set, handleDone }) {
 
@@ -56,17 +57,19 @@ export default function QuestionsUserDashboard({ back, set, handleDone }) {
                 alignItems: 'center',
                 paddingTop: '100px',
                 paddingBottom: '100px',
-                minHeight: '100vh',
+                minHeight: '100vh'
             }}
         >
             <CssBaseline />
+            
             <Card
                 variant="outlined"
                 sx={{
                     width: '80%',
                     marginBottom: 5,
                     padding: 3,
-                    mt: 10
+                    mt: 10,
+                    backgroundColor: '#3A394E'
                 }}
             >
                 <CardContent>

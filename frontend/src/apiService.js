@@ -97,5 +97,25 @@ async function saveStudySet(new_title, new_transcript, new_questions) {
     }
 }
 
+async function sendAudio(formData) {
+    try {
+        // Send POST request to FastAPI backend
+        const response = await axios.post('http://localhost:8000/gen/process-audio', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true
+        });
+        
+        // Handle response (e.g., display the text received from the backend)
+        console.log('Response from backend:', response.data);
 
-export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete, saveStudySet}
+        return response
+      
+      } catch (error) {
+        console.error('Error sending audio:', error);
+      }
+}
+
+
+export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete, saveStudySet, sendAudio}

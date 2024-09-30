@@ -12,6 +12,7 @@ import RecordButton from '../components/RecordButton';
 import PausePlayButton from '../components/PausePlayButton';
 import PausePlayIndicator from '../components/PausePlayIndicator';
 import { useAudioContext } from '../context/AudioContext';
+import { sendAudio } from '../apiService';
 
 import axios from 'axios';
 
@@ -23,6 +24,7 @@ const Record = () => {
   const [audioUrl, setAudioUrl] = useState(null);
   const [pause, setPause] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
+  const [page, setPage] = useState(0);  // 0 is the recording page, 1 is the question generate page  
   const { setProcessedAudioResponse } = useAudioContext();
 
 
@@ -130,39 +132,36 @@ const Record = () => {
     setIsRecording(!isRecording);
   };
 
+  const handlePage = (num) => {
+    setPage(num)
+  }
+
   // axios call here to server
   const handleGenerate = async () => {
     setIsRecording(false);
     setGenerate(!generate);
 
-    if (audioBlob && !generate) { //checking if stored blob exists
+    if (audioBlob) { //checking if stored blob exists
 
       // Prepare form data
       const formData = new FormData();
       formData.append('audio', audioBlob, 'recording.mp3'); // 'audio' is the field name, 'recording.webm' is the file name
-      
-      try {
-        // Send POST request to FastAPI backend
-        const response = await axios.post('http://localhost:8000/process-audio', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-        
-        // Handle response (e.g., display the text received from the backend)
-        console.log('Response from backend:', response.data);
 
-        // Store the response in context
+      const response = await sendAudio(formData)
+      if (response.status === 200) {
         setProcessedAudioResponse(response.data); // Save the backend response
-      
-      } catch (error) {
-        console.error('Error sending audio:', error);
       }
+      else{
+        setProcessedAudioResponse({});  // empty dictionary
+        // handle front end notification error here
+      }
+
+
     }
     else {
       console.error("No audio blob available.");
     }
-    
+
   };
 
   const handleDelete = () => {
@@ -171,6 +170,7 @@ const Record = () => {
     setAudioUrl(null);
     setAudioBlob(null)
     setPause(false);
+    setProcessedAudioResponse(null)
     recordedChunksRef.current = [];
   };
 
@@ -193,7 +193,7 @@ const Record = () => {
 
   return (
     <>
-      {!generate ? (
+      {page === 0 ? (
         <Box
           sx={{
             display: 'flex',
@@ -253,7 +253,7 @@ const Record = () => {
 
           {/* Generate Button */}
           <Box sx={{ position: 'absolute', bottom: 40 }}>
-            <GenerateButton handleGenerate={handleGenerate} audioUrl={audioUrl} />
+            <GenerateButton handlePage={handlePage} handleGenerate={handleGenerate} audioUrl={audioUrl} />
           </Box>
 
           {/* Box for playback and delete button */}
@@ -261,10 +261,10 @@ const Record = () => {
             <Box sx={{ position: 'absolute', bottom: 100 }}>
               <Box
                 sx={{
-                  backgroundColor: '#191919', 
-                  padding: '10px', 
+                  backgroundColor: '#191919',
+                  padding: '10px',
                   paddingTop: '15px',
-                  borderRadius: '35px', 
+                  borderRadius: '35px',
                 }}
               >
                 <audio controls src={audioUrl} type="audio/mp3"></audio>
@@ -281,7 +281,7 @@ const Record = () => {
           )}
         </Box>
       ) : (
-        <Questions back={handleGenerate} />
+        <Questions handleDelete = {handleDelete} handlePage={handlePage} />
       )}
     </>
   );

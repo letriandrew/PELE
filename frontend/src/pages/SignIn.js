@@ -61,15 +61,6 @@ export default function SignIn() {
       setEmailErrorMessage('');
     }
 
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
     return isValid;
   };
 
@@ -143,15 +134,8 @@ export default function SignIn() {
                     id="password"
                     autoComplete="new-password"
                     variant="outlined"
-                    error={passwordError}
-                    helperText={passwordErrorMessage}
-                    color={passwordError ? 'error' : 'primary'}
                   />
                 </FormControl>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive updates via email."
-                />
                 <Button
                   type="submit"
                   fullWidth
@@ -163,6 +147,7 @@ export default function SignIn() {
                     '&:hover': {
                       background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
                     },
+                    mt: 2
                   }}
                 >
                   Sign in
