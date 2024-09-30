@@ -13,20 +13,18 @@ const UserManual = () => {
       icon: <InfoIcon />,
       title: 'Getting Started',
       description: `###To begin using the platform, follow these steps:
-1.) Lorem ipsum odor amet, consectetuer adipiscing elit. Conubia commodo ac proin sociosqu sociosqu. 
-2.) Taciti ad dolor elit nostra quisque consequat. Fusce cursus nam tempor; mattis habitant elit potenti finibus. 
-3.) Hendrerit elementum viverra tristique maecenas ex quis sapien. 
-4.) Lobortis felis maecenas rhoncus aenean rutrum sapien. Dictumst ullamcorper vestibulum molestie phasellus amet enim facilisi. 
-5.) Dui odio nisi velit tempus luctus porta nam. Nulla potenti rhoncus ridiculus maecenas phasellus vitae. Quam mus erat cubilia et eget feugiat.`
+1.) If you haven't created an account yet, sign up and register an account with PELE.
+2.) Once signed in, you have access to the recoring module and can begin studying!`
     },
     {
       icon:<StepIcon />,
       title: 'Using the Recorder',
       description: `###Learn how to utilize PELE to enhance your learning:
-- Lorem ipsum odor amet, consectetuer adipiscing elit. Conubia commodo ac proin sociosqu sociosqu. 
-- Taciti ad dolor elit nostra quisque consequat. Fusce cursus nam tempor; mattis habitant elit potenti finibus. 
-- Hendrerit elementum viverra tristique maecenas ex quis sapien. 
-- Lobortis felis maecenas rhoncus aenean rutrum sapien. Dictumst ullamcorper vestibulum molestie phasellus amet enim facilisi.`
+1.) Click on the record button at the top.
+2.) Press record and begin your "lecture"! 
+3.) As soon as you finish, press stop recording. You can then either generate questions based off the recording or rerecord the "lesson" if you need by deleting it using the trashcan button on the recording.
+4.) Once you've waited for the questions to generate, you can either go back to record or save your question set!
+5.) To access the questions and track your progress, you can click on the Dashboard button at the top and find all the tools needed to use your question set!`
     },
     {
       icon:<HelpOutlineIcon />,
