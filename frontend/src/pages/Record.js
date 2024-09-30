@@ -108,7 +108,7 @@ const Record = () => {
     if (mediaRecorderRef.current) {
       await mediaRecorderRef.current.stop();
       mediaRecorderRef.current.onstop = async () => {
-        const blob = new Blob(recordedChunksRef.current, { type: 'audio/webm' });
+        const blob = new Blob(recordedChunksRef.current, { type: 'audio/mp3' });
         recordedChunksRef.current = [];
         setAudioBlob(blob); //store the blob and ensure it doesnt get lost for backend transfer
         if (audioUrl) {
@@ -139,7 +139,7 @@ const Record = () => {
 
       // Prepare form data
       const formData = new FormData();
-      formData.append('audio', audioBlob, 'recording.webm'); // 'audio' is the field name, 'recording.webm' is the file name
+      formData.append('audio', audioBlob, 'recording.mp3'); // 'audio' is the field name, 'recording.webm' is the file name
       
       try {
         // Send POST request to FastAPI backend
@@ -267,7 +267,7 @@ const Record = () => {
                   borderRadius: '35px', 
                 }}
               >
-                <audio controls src={audioUrl} type="audio/webm"></audio>
+                <audio controls src={audioUrl} type="audio/mp3"></audio>
               </Box>
               <Box sx={{
                 position: 'absolute',
