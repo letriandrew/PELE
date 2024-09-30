@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Grid, Card, CardContent, CardMedia, Avatar, CssBaseline } from '@mui/material';
+import { Box, Typography, Grid, Card, CardContent, CardMedia, Avatar, CssBaseline, Divider } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { IconButton } from '@mui/material';
@@ -9,7 +9,7 @@ const teamMembers = [
     name: 'Andrew Le',
     role: 'Founder & CEO',
     image: 'https://media.licdn.com/dms/image/v2/C5603AQFbX156wdDE6Q/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1639888880287?e=1732147200&v=beta&t=e0Lcxb5rwQOzP30Wfb_jC6qDRlEIpcfI6fW3KtcBLos',
-    description: 'Andrew is a visionary leader with a passion for innovation and technology.',
+    description: 'I am currently working as a Software Engineer at Panasonic Avionics Corporation while studying for my Masters in Data Science at the University of Colorado Boulder. Previously, I completed my Bachelors in Computer Science at California State University San Marcos. In my spare time I love to DJ, hike in nature, and watch sports! (Unfortunately I am a fan of the Dallas Cowboys...) Feel free to reach out on LinkedIn if you would like to connect!',
     githubLink: 'https://github.com/letriandrew',
     linkedInLink: 'https://www.linkedin.com/in/letriandrew/',
   },
@@ -23,34 +23,54 @@ const teamMembers = [
   },
 ];
 
+// Link to 2016 study
+const studyLink = "https://psycnet.apa.org/record/2015-38251-001;"
+
 const AboutUs = () => {
   return (
     <Box sx={{ padding: '40px' }}>
         <CssBaseline/>
-      <Box sx={{ textAlign: 'center', marginBottom: '50px', marginTop: '90px' }}>
+      <Box sx={{ textAlign: 'center', marginBottom: '60px', marginTop: '90px' }}>
         <Typography variant="h3" fontWeight="bold" gutterBottom>
-          About Us
+          What is PELE?
         </Typography>
         <Typography variant="h6" color="textSecondary">
-          We are a passionate team dedicated to building innovative solutions for people everywhere.
+          PELE stands for <strong>"Protégé Effect Learning Entity"</strong>.
         </Typography>
       </Box>
 
-      <Box sx={{ textAlign: 'center', marginBottom: '50px', marginTop: '90px' }}>
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
-          Our Story
+      <Box sx={{ textAlign: 'center', marginBottom: '60px', marginTop: '50px' }}>
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          What is the Protégé Effect?
         </Typography>
         <Typography variant="body1" color="textSecondary" sx={{ maxWidth: '800px', margin: '0 auto' }}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut 
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit 
-        esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
-        culpa qui officia deserunt mollit anim id est laborum.
+          The Protégé Effect is a learning concept that suggest that teaching a specific subject matter validates knowledge and induces effective learning. This is a also known as "learning by teaching". By explaining and teaching a concept to somebody, the teacher can develop their own understanding of the subject while identifying gaps in their own knowledge. In 2016, there was a <a href={studyLink} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 'bold', color: 'inherit' }}>study</a> that found that individuals that learn with the preparation to teach show a more complete knowledge of the material they are learning.
         </Typography>
       </Box>
 
-      <Box sx={{ textAlign: 'center', marginBottom: '50px', marginTop: '90px' }}>
-        <Typography variant="h4" fontWeight="bold" gutterBottom>
+      <Box sx={{ textAlign: 'center', marginBottom: '60px', marginTop: '50px' }}>
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
+          Our Story
+        </Typography>
+        <Typography variant="body1" color="textSecondary" sx={{ marginBottom: '16px', maxWidth: '800px', margin: '0 auto' }}>
+          Here at PELE, we believe in this concept wholeheartedly. The issue is that what if somebody can't find somebody else to teach?
+        </Typography>
+        
+        <Typography variant="h6" color="textSecondary" sx={{ marginTop: '15px', marginBottom: '14px' }}>
+          The answer is <strong>PELE</strong>.
+        </Typography>
+        
+        <Typography variant="body1" color="textSecondary" sx={{ marginBottom: '16px', maxWidth: '800px', margin: '0 auto' }}>
+          With PELE, the goal is to provide a framework and application for somebody to teach a subject without needing a second individual. This is accomplished through PELE recording the subject matter that you are verifying your knowledge with and providing a plethora of questions created to better establish your understanding. With these questions, you can save them as well as tag various other denotations, like completion.
+        </Typography>
+
+        <Typography variant="body1" sx={{ marginTop: '20px' }}>
+          To learn more about our application or about the creators of PELE, you can find out more below!
+        </Typography>
+      </Box>
+
+      <Box sx={{ textAlign: 'center', marginBottom: '60px', marginTop: '50px' }}>
+        <Typography variant="h5" fontWeight="bold" gutterBottom>
           Meet Our Team
         </Typography>
         <Grid container spacing={4} justifyContent="center">
