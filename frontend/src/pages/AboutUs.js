@@ -7,7 +7,7 @@ import { IconButton } from '@mui/material';
 const teamMembers = [
   {
     name: 'Andrew Le',
-    role: 'Founder & CEO',
+    role: '',
     image: 'https://media.licdn.com/dms/image/v2/C5603AQFbX156wdDE6Q/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1639888880287?e=1732147200&v=beta&t=e0Lcxb5rwQOzP30Wfb_jC6qDRlEIpcfI6fW3KtcBLos',
     description: 'I am currently working as a Software Engineer at Panasonic Avionics Corporation while studying for my Masters in Data Science at the University of Colorado Boulder. Previously, I completed my Bachelors in Computer Science at California State University San Marcos. In my spare time I love to DJ, hike in nature, and watch sports! (Unfortunately I am a fan of the Dallas Cowboys...) Feel free to reach out on LinkedIn if you would like to connect!',
     githubLink: 'https://github.com/letriandrew',
