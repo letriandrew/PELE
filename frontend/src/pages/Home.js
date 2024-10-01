@@ -95,6 +95,7 @@ export default function Home() {
                 '&:hover': {
                   background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
                 },
+                mb: 2
               }}>
               <Typography sx={{fontWeight: 600, letterSpacing: '0.1rem'}}>
                 Get Started

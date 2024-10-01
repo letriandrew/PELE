@@ -43,7 +43,7 @@ async def login_for_access_token(
         key="pele-access-token", 
         value=access_token,
         httponly=False,                  
-        secure=True,                  
+        secure=False,                  
         samesite="lax"                   
     )
     

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 //const API_URL = "http://localhost:8000" // probs better to use .env to store this
-const API_URL = "http://3.138.194.149:8000"
+const API_URL = "http://44.204.12.0/api"
 
 const apiService = axios.create({
     baseURL: API_URL,
@@ -101,7 +101,7 @@ async function saveStudySet(new_title, new_transcript, new_questions) {
 async function sendAudio(formData) {
     try {
         // Send POST request to FastAPI backend
-        const response = await axios.post('http://localhost:8000/gen/process-audio', formData, {
+        const response = await axios.post('http://44.204.12.0/api/gen/process-audio', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

@@ -19,7 +19,8 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "http://44.204.12.0"
 ]
 
 app.add_middleware(
@@ -37,7 +38,7 @@ async def secure_path(request: Request, call_next):
         print(f"OPTIONS request for {request.url.path}")
 
         response = Response(status_code=HTTP_204_NO_CONTENT)
-        response.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
+        response.headers["Access-Control-Allow-Origin"] = "http://44.204.12.0"
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET,POST,DELETE,PUT,PATCH,OPTIONS"
         response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
@@ -46,7 +47,7 @@ async def secure_path(request: Request, call_next):
 
     db = SessionLocal()
     try:
-        target_paths = ["/gen/", "/study-set/","/question/","/transcript/"]
+        target_paths = ["/api/gen/", "/api/study-set/","/api/question/","/api/transcript/"]
 
         token = request.cookies.get('pele-access-token')
         
@@ -65,11 +66,11 @@ async def secure_path(request: Request, call_next):
 
 
 # include different routes here
-app.include_router(auth.router, prefix='/auth')
-app.include_router(study_set.router, prefix='/study-set')
-app.include_router(question.router, prefix='/question')
-app.include_router(transcript.router, prefix='/transcript')
-app.include_router(audio.router , prefix='/gen')
+app.include_router(auth.router, prefix='/api/auth')
+app.include_router(study_set.router, prefix='/api/study-set')
+app.include_router(question.router, prefix='/api/question')
+app.include_router(transcript.router, prefix='/api/transcript')
+app.include_router(audio.router , prefix='/api/gen')
 
 
 # Dependency
@@ -81,7 +82,7 @@ def get_db():
         db.close()
 
 
-@app.post("/users/", response_model=schemas.User, status_code=status.HTTP_200_OK)
+@app.post("/api/users/", response_model=schemas.User, status_code=status.HTTP_200_OK)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
@@ -89,13 +90,13 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 
-@app.get("/users/", response_model=list[schemas.User])
+@app.get("/api/users/", response_model=list[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 
 
-@app.get("/users/{user_id}", response_model=schemas.User)
+@app.get("/api/users/{user_id}", response_model=schemas.User)
 def read_user(user_id: int, db: Session = Depends(get_db)):
     db_user = crud.get_user(db, user_id=user_id)
     if db_user is None:
@@ -103,19 +104,19 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
-@app.post("/users/{user_id}/items/", response_model=schemas.Item)
+@app.post("/api/users/{user_id}/items/", response_model=schemas.Item)
 def create_item_for_user(
     user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
 ):
     return crud.create_user_item(db=db, item=item, user_id=user_id)
 
 
-@app.get("/items/", response_model=list[schemas.Item])
+@app.get("/api/items/", response_model=list[schemas.Item])
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
 
-@app.get("/test")
+@app.get("/api/test")
 def read_root():
     return {"message": "Welcome!"}
 
