@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 
-const API_URL = "http://localhost:8000" // probs better to use .env to store this
+//const API_URL = "http://localhost:8000" // probs better to use .env to store this
+const API_URL = "http://3.138.194.149:8000"
 
 const apiService = axios.create({
     baseURL: API_URL,
