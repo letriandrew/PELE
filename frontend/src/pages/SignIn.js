@@ -17,6 +17,7 @@ import { GoogleIcon } from '../components/CustomIcons';
 import { signInUser } from '../apiService';
 import { useNavigate } from 'react-router-dom';
 import { AuthDispatchContext } from '../context/AuthContext';
+import Notification from '../components/Notification';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -41,7 +42,9 @@ export default function SignIn() {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const [notification, setNotification] = React.useState(false);
+  const [notificationStatus, setNotificationStatus] = React.useState(false);
+  const [notificationMessage, setNotificationMessage] = React.useState("");
   const authDispatch = React.useContext(AuthDispatchContext)
   const navigate = useNavigate();
 
@@ -64,6 +67,14 @@ export default function SignIn() {
     return isValid;
   };
 
+  const handleCloseNotification = () =>{
+    setNotification(false);
+  }
+
+  const handleOpenNotification = () =>{
+    setNotification(true);
+  }  
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -81,6 +92,9 @@ export default function SignIn() {
     }
     else{
       console.error("error during sign in",response)
+      setNotificationMessage(response.response.data.detail)
+      setNotificationStatus(false)
+      handleOpenNotification()
     }
   };
 
@@ -165,7 +179,7 @@ export default function SignIn() {
                   </span>
                 </Typography>
               </Box>
-              <Divider>
+              {/* <Divider>
                 <Typography sx={{ color: 'text.secondary' }}>or</Typography>
               </Divider>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -185,9 +199,12 @@ export default function SignIn() {
                 >
                   Sign in with Google
                 </Button>
-              </Box>
+              </Box> */}
             </Card>
           </Stack>
+          { notification &&
+          <Notification message={notificationMessage} status={notificationStatus} close={handleCloseNotification}/>
+          }
         </>
   );
 }
