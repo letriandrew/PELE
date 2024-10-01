@@ -14,8 +14,10 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { GoogleIcon } from '../components/CustomIcons';
-import { signUpUser } from '../apiService';
+import { signUpUser, signInUser } from '../apiService';
 import Notification from '../components/Notification';
+import { useNavigate } from 'react-router-dom';
+import { AuthDispatchContext } from '../context/AuthContext';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -45,6 +47,9 @@ export default function SignUp() {
   const [nameErrorMessage, setNameErrorMessage] = React.useState('');
   const [notification, setNotification] = React.useState(false);
   const [notificationStatus, setNotificationStatus] = React.useState(false);
+  const [notificationMessage, setNotificationMessage] = React.useState("");
+  const authDispatch = React.useContext(AuthDispatchContext)
+  const navigate = useNavigate();
 
 
   const validateInputs = () => {
@@ -96,13 +101,33 @@ export default function SignUp() {
     if (response.status === 200){
       console.log("account creation success!",response.data)
       form.reset();
-      setNotificationStatus(true)
-      setNotification(true)
+      // setNotificationStatus(true)
+      // setNotification(true)
+      // setNotificationMessage("Account successfully created")
+      // navigate('/signIn')
+
+      const res = await signInUser({
+        email: data.get('email'),
+        password: data.get('password'),
+      });
+      
+      if (res.status === 200){
+        console.log("sign in success!",res.data)
+        sessionStorage.setItem('user',JSON.stringify(res.data))  // save basic user data in session storage for easy access
+        authDispatch({type:'change',payload:res.data})           // setting context provider use state
+        navigate('/')
+      }
+      else{
+        console.error("error during sign in",res)
+      }
+
+
     }
     else{
-      console.error("error in account creation",response)
+      console.error("error in account creation",response.response)
       setNotificationStatus(false)
       setNotification(true)
+      setNotificationMessage(response.response.data.detail)
     }
   };
 
@@ -179,10 +204,10 @@ export default function SignUp() {
                     color={passwordError ? 'error' : 'primary'}
                   />
                 </FormControl>
-                <FormControlLabel
+                {/* <FormControlLabel
                   control={<Checkbox value="allowExtraEmails" color="primary" />}
                   label="I want to receive updates via email."
-                />
+                /> */}
                 <Button
                   type="submit"
                   fullWidth
@@ -194,6 +219,7 @@ export default function SignUp() {
                     '&:hover': {
                       background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
                     },
+                    mt:2
                   }}
                 >
                   Sign up
@@ -211,7 +237,7 @@ export default function SignUp() {
                   </span>
                 </Typography>
               </Box>
-              <Divider>
+              {/* <Divider>
                 <Typography sx={{ color: 'text.secondary' }}>or</Typography>
               </Divider>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -231,10 +257,10 @@ export default function SignUp() {
                 >
                   Sign up with Google
                 </Button>
-              </Box>
+              </Box> */}
             </Card>
             { notification &&
-            <Notification message = {notificationStatus ? "Account Creation Success" : "Account Creation Failure"} status = {notificationStatus} close = {handleCloseNotification}/>
+            <Notification message = {notificationMessage} status = {notificationStatus} close = {handleCloseNotification}/>
             }
           </Stack>
         </>

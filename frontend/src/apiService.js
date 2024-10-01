@@ -117,5 +117,16 @@ async function sendAudio(formData) {
       }
 }
 
+async function deleteStudySet(id) {
+    try {
+        const response = await apiService.delete('study-set/delete-set/'+id);
 
-export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete, saveStudySet, sendAudio}
+        return response;
+    } catch (error) {
+        console.error("Error deleting study set:", error);
+        return error;
+    }
+}
+
+
+export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete, saveStudySet, sendAudio, deleteStudySet}
