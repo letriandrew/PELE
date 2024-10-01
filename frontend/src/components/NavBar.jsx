@@ -117,7 +117,7 @@ function NavBar() {
 
               {
                   pages.map((page) => (
-                    <MenuItem key={page[0]} onClick={handleCloseNavMenu} to={page[1]}>
+                    <MenuItem key={page[0]} onClick={handleCloseNavMenu} component='a' href={page[1]}>
                       <Typography sx={{ textAlign: 'center' }}>{page[0]}</Typography>
                     </MenuItem>
                   ))

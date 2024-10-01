@@ -13,14 +13,15 @@ from .database import crud
 from .service.auth import get_current_user
 from starlette.status import HTTP_204_NO_CONTENT
 from starlette.responses import Response
+from .config import settings
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+client_url = settings.client_url
 
 origins = [
-    "http://localhost:3000",
-    "http://44.204.12.0"
+    client_url
 ]
 
 app.add_middleware(
@@ -38,7 +39,7 @@ async def secure_path(request: Request, call_next):
         print(f"OPTIONS request for {request.url.path}")
 
         response = Response(status_code=HTTP_204_NO_CONTENT)
-        response.headers["Access-Control-Allow-Origin"] = "http://44.204.12.0"
+        response.headers["Access-Control-Allow-Origin"] = client_url
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "GET,POST,DELETE,PUT,PATCH,OPTIONS"
         response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"

@@ -9,6 +9,7 @@ class Settings:
     secret_key: str = os.getenv("SECRET_KEY")
     algorithm: str = os.getenv("ALGORITHM")
     access_token_expire_minutes: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+    client_url: str = os.getenv("CLIENT_URL")
 
     def __init__(self):
         if not self.openai_api_key:
@@ -19,6 +20,8 @@ class Settings:
             raise RuntimeError("algorithm. Ensure it's set in the .env file.")
         elif not self.access_token_expire_minutes:
             raise RuntimeError("access_token_expire_minutes key not found. Ensure it's set in the .env file.")
+        elif not self.client_url:
+            raise RuntimeError("clinet url not found. Ensure it's set in the .env file.")
 
 settings = Settings()
 
