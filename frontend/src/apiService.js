@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 
-const API_URL = "http://localhost:8000/api" 
+//const API_URL = "http://localhost:8000/api" 
 //const API_URL = "http://44.204.12.0/api"
+const API_URL = "https://pele.lol/api"
 
 const apiService = axios.create({
     baseURL: API_URL,
