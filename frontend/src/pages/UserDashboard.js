@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Box, Tabs, Tab, Typography, Container, CssBaseline, Card, CardContent, LinearProgress, IconButton, TextField, Menu, MenuItem } from '@mui/material';
+import { Avatar, Box, Tabs, Tab, Typography, Container, CssBaseline, Card, CardContent, LinearProgress, IconButton, TextField, Menu, MenuItem, Fab } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import PendingIcon from '@mui/icons-material/Pending';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -9,6 +9,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { getStudySets } from '../apiService';
 import QuestionsUserDashboard from '../components/QuestionsUserDashboard';
 import { deleteStudySet } from '../apiService';
+import CloseIcon from '@mui/icons-material/Close';
+import TurnedInIcon from '@mui/icons-material/TurnedIn';
+import { changeTitle } from '../apiService';
 
 function UserDashboard() {
   const [value, setValue] = useState(0);
@@ -18,6 +21,8 @@ function UserDashboard() {
   const [done, setDone] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null); // For menu
   const [editIndex, setEditIndex] = useState(null); // Track which set is being edited
+  const [editMode, setEditMode] = useState(false)
+  const [title, setTitle] = useState('')
 
   useEffect(() => {
     const retrieveSets = async () => {
@@ -29,6 +34,44 @@ function UserDashboard() {
     };
     retrieveSets();
   }, [done]);
+
+  const handleEnterEditMode = () =>{
+    setEditMode(true);
+  }
+
+  const handleExitEditMode = () =>{
+    setEditMode(false);
+    setEditIndex(null);
+    setTitle('');
+  }
+
+  const handleTitleSave = async () =>{
+    console.log(editIndex,title)
+    if(editIndex !== null && (title !== '')){
+      console.log('AAAAAA')
+      const response = await changeTitle(sets[editIndex].id,title)
+      if(response.status === 200){
+        // stuff here
+        console.log(response)
+
+        setSets((prevData) => 
+          prevData.map((item) =>
+            item.id === sets[editIndex].id
+              ? { ...item, title: title } 
+              : item
+          )
+        );
+
+        handleExitEditMode()
+      }
+      else{
+        // stuff here
+      }
+    }
+    else{
+      // stuff here
+    }
+  }
 
   const handleDone = async () => {
     setDone(!done);
@@ -56,9 +99,8 @@ function UserDashboard() {
   };
 
   const handleEditClick = () => {
-    console.log('edit click')
+    handleEnterEditMode()
     setAnchorEl(null);
-    setEditIndex(editIndex); // Track the index of the editable set
   };
 
   const handleDeleteClick = async (del) => {
@@ -76,15 +118,8 @@ function UserDashboard() {
     setAnchorEl(null);
   };
 
-  const handleEditChange = (event, i) => {
-    const updatedSets = [...sets];
-    updatedSets[i].title = event.target.value;
-    setSets(updatedSets);
-  };
-
-  const handleEditBlur = () => {
-    console.log("HUHHH")
-    setEditIndex(null); // Exit edit mode
+  const handleEditChange = (event) => {
+    setTitle(event.target.value)
   };
 
   const renderQuestionSets = () => {
@@ -109,11 +144,12 @@ function UserDashboard() {
             onClick={() => {
               handlePageChange();
               handleCardClick(i);
+              
             }}
             sx={{
-              transition: 'transform 0.3s ease-in-out',
+              transition: editMode && i === editIndex ? '':'transform 0.3s ease-in-out',
               '&:hover': {
-                transform: 'scale(1.1)',
+                transform: editMode && i === editIndex ? '':'scale(1.1)',
               },
               width: '100%',
               height: 200,
@@ -124,13 +160,43 @@ function UserDashboard() {
           >
             <CardContent sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
               
+                { editMode && i === editIndex ?
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2, mr:2 }}>
+                  <IconButton 
+                    sx={{mr:1}}
+                    onClick={(e)=>{
+                      e.stopPropagation();
+                      handleExitEditMode();
+                    }}
+                  >
+                    <CloseIcon/>
+                  </IconButton>
+                  <TextField 
+                    onClick={(e)=>{
+                      e.stopPropagation();
+                    }}
+                    value={title}
+                    onChange={handleEditChange}
+                  />
+                  <IconButton 
+                    sx={{ml:1}}
+                    onClick={(e)=>{
+                      e.stopPropagation();
+                      handleTitleSave();
+                    }}
+                  >
+                    <TurnedInIcon/>
+                  </IconButton>
+                </Box>
+                :
                 <Typography variant="h6">{sets[i].title}</Typography>
+                }
 
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2 }}>
-                <Typography variant="body2" sx={{ mr: 2 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', mt: 2 }}>
+                <Typography variant="body2">
                   {`${progressData[i]}%`}
                 </Typography>
-                <Box sx={{ width: '20%' }}>
+                <Box sx={{ width: '30%'}}>
                   <LinearProgress
                     sx={{
                       height: 10,
@@ -144,6 +210,7 @@ function UserDashboard() {
                     value={progressData[i]}
                   />
                 </Box>
+
               </Box>
 
               {/* Icon Button for Menu */}
@@ -166,12 +233,13 @@ function UserDashboard() {
                   handleMenuClose();
                 }}
               >
-                {/* <MenuItem onClick={ (e) =>{
+                <MenuItem onClick={ (e) =>{
                   e.stopPropagation();
                   handleEditClick()
+                  setTitle(sets[editIndex].title)
                 }}>
                   <EditIcon sx={{ marginRight: 1 }} /> Edit
-                </MenuItem> */}
+                </MenuItem>
                 <MenuItem onClick={ (e) =>{
                   e.stopPropagation();
                   handleDeleteClick(editIndex)

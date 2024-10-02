@@ -129,5 +129,19 @@ async function deleteStudySet(id) {
     }
 }
 
+async function changeTitle(id, title) {
+    try {
+        const response = await apiService.patch('/transcript/change-title', {
+            id: id,
+            title: title
+        });
 
-export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete, saveStudySet, sendAudio, deleteStudySet}
+        return response;
+    } catch (error) {
+        console.error("Error changing title:", error);
+        return error;
+    }
+}
+
+
+export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete, saveStudySet, sendAudio, deleteStudySet, changeTitle}
