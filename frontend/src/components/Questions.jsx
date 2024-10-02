@@ -26,11 +26,11 @@ export default function Questions({ handleDelete, handlePage }) {
     setOpenDialog(false);
   };
 
-  const handleCloseNotification =()=>{
+  const handleCloseNotification = () => {
     setNotification(false)
   }
 
-  const handleOpenNotification =()=>{
+  const handleOpenNotification = () => {
     setNotification(true)
   }
 
@@ -63,7 +63,16 @@ export default function Questions({ handleDelete, handlePage }) {
     >
       <CssBaseline />
 
-      <Box sx={{ flexGrow: 1, width: '60%', display: 'flex', justifyContent: 'center' }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          width: {
+            xs: '90%', // For small screens (mobile), take up 90% of the screen width
+            sm: '60%', // For larger screens (tablet and up), use fit-content
+          },
+          display: 'flex',
+          justifyContent: 'center'
+        }}>
         <Box container spacing={2} sx={{ mt: 10 }}>
           {transcript && (
             <Card
@@ -147,6 +156,14 @@ export default function Questions({ handleDelete, handlePage }) {
                     '&:hover': {
                       background: 'linear-gradient(45deg, #4d4c70 30%, #3A394E 90%)',
                     },
+                    mt: {
+                      xs: 2,
+                      sm: 0
+                    },
+                    mr:{
+                      xs: 2,
+                      sm: 0
+                    }
                   }}
                   onClick={handleDialogOpen} // Open the dialog on click
                 >
@@ -167,7 +184,7 @@ export default function Questions({ handleDelete, handlePage }) {
       {/* Dialog Component */}
       <SaveSetDialog open={openDialog} handleClose={handleDialogClose} handleSave={handleSave} />
       {notification &&
-        <Notification message={notificationMessage} status={notificationStatus} close={handleCloseNotification}/>
+        <Notification message={notificationMessage} status={notificationStatus} close={handleCloseNotification} />
       }
     </Box>
   );

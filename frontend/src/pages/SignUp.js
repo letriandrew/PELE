@@ -51,6 +51,8 @@ export default function SignUp() {
   const authDispatch = React.useContext(AuthDispatchContext)
   const navigate = useNavigate();
 
+  const [signUpDisabled, setSignUpDisabled] = React.useState(true);
+
 
   const validateInputs = () => {
     const email = document.getElementById('email');
@@ -141,8 +143,9 @@ export default function SignUp() {
           <Stack
             sx={{
               justifyContent: 'center',
-              height: '100dvh',
+              height: signUpDisabled ? '88dvh': '100dvh',
               p: 2,
+              pt: 7,
               mt: 4
             }}
           >
@@ -162,6 +165,7 @@ export default function SignUp() {
                 <FormControl>
                   <FormLabel htmlFor="name">Full name</FormLabel>
                   <TextField
+                    disabled = {signUpDisabled}
                     autoComplete="name"
                     name="name"
                     required
@@ -176,6 +180,7 @@ export default function SignUp() {
                 <FormControl>
                   <FormLabel htmlFor="email">Email</FormLabel>
                   <TextField
+                    disabled = {signUpDisabled}
                     required
                     fullWidth
                     id="email"
@@ -191,6 +196,7 @@ export default function SignUp() {
                 <FormControl>
                   <FormLabel htmlFor="password">Password</FormLabel>
                   <TextField
+                    disabled = {signUpDisabled}
                     required
                     fullWidth
                     name="password"
@@ -209,6 +215,7 @@ export default function SignUp() {
                   label="I want to receive updates via email."
                 /> */}
                 <Button
+                  disabled = {signUpDisabled}
                   type="submit"
                   fullWidth
                   variant="contained"
@@ -259,10 +266,30 @@ export default function SignUp() {
                 </Button>
               </Box> */}
             </Card>
+            
+
             { notification &&
             <Notification message = {notificationMessage} status = {notificationStatus} close = {handleCloseNotification}/>
             }
           </Stack>
+          {signUpDisabled && (
+          <Box
+            sx={{
+              backgroundColor: '#ffeb3b',
+              color: '#000',
+              padding: 2,
+              borderRadius: 1,
+              textAlign: 'center',
+            }}
+          >
+            Hello! Our web application is currently under going testing by a select
+            number of users. Signing up is temporarily disabled. If you would like
+            to become a tester, please contact one of our team members in the about
+            us page. Hope to see you soon!
+            <br />
+            <strong>- PELE team</strong>
+          </Box>
+        )}
         </>
   );
 }
