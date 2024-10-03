@@ -82,15 +82,19 @@ export default function QuestionsUserDashboard({ back, set, handleDone }) {
     }
 
     return (
+        <>
         <Box
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                paddingTop: '100px',
+                paddingTop: {
+                    xs: hideTranscript ? '100px' : '100px',
+                    sm: hideTranscript ? '150px' : '100px'
+                },
                 paddingBottom: '100px',
-                minHeight: '100vh'
+                maxHeight: '70%'
             }}
         >
             <CssBaseline />
@@ -102,7 +106,10 @@ export default function QuestionsUserDashboard({ back, set, handleDone }) {
                     width: '80%',
                     marginBottom: 5,
                     padding: 3,
-                    mt: 10,
+                    mt: {
+                        xs: 5,
+                        sm: 10
+                    },
                     backgroundColor: '#3A394E'
                 }}
             >
@@ -177,10 +184,10 @@ export default function QuestionsUserDashboard({ back, set, handleDone }) {
                                     }}
                                 >
                                     <CardContent>
-                                        <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+                                        <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: {xs: 14, sm: 16} }}>
                                             Question {index + 1}
                                         </Typography>
-                                        <Typography variant="body2">
+                                        <Typography variant="body2" sx={{fontSize: {xs: 14, sm: 16}}}>
                                             {i.question}
                                         </Typography>
                                     </CardContent>
@@ -237,25 +244,25 @@ export default function QuestionsUserDashboard({ back, set, handleDone }) {
                             },
                             height: {
                                 xs: '40vh',
-                                sm: '50vh'
-                            }
+                                sm: '50vh' //
+                            },
+                            position: 'relative',
                         }}
                     >
 
                         <CardContent>
-                            <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
+                            <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: {xs: 14, sm: 20} }}>
                                 Question {cardIndex + 1}
                             </Typography>
-                            <Typography variant="body2">
+                            <Typography variant="body2" sx ={{fontSize: {xs: 14, sm: 20}}}>
                                 {set.questions[cardIndex].question}
                             </Typography>
                         </CardContent>
                         <Box
                             sx={{
-                                display: 'flex',
-                                justifyContent: 'flex-end',
-                                alignItems: 'center',
-                                marginTop: 'auto'  // Push the icon to the bottom of the card content
+                                position: 'absolute',  // Pin to bottom right
+                                bottom: 8,             // Add some margin from the bottom
+                                right: 8,              // Add some margin from the right
                             }}
                         >
                             <IconButton
@@ -284,26 +291,42 @@ export default function QuestionsUserDashboard({ back, set, handleDone }) {
                     </IconButton>
                 </Box>
             }
-
-
-            <Box sx={{ padding: '50px' }}>
-                <Button
-                    variant="contained"
-                    sx={{
-                        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                        color: 'white',
-                        '&:hover': {
-                            background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
-                        },
-                    }}
-                    onClick={() => {
-                        handleRequest()
-                        back()
-                    }}
-                >
-                    <Typography fontWeight={550}>Back To Dashboard</Typography>
-                </Button>
-            </Box>
         </Box>
+        <Box 
+            sx={{ 
+                position: 'fixed',
+                bottom: '30px', // Adjust this value to set the distance from the bottom
+                left: '50%',
+                transform: 'translateX(-50%)',
+            }}
+        >
+        <Button
+            variant="contained"
+            sx={{
+                background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+                color: 'white',
+                '&:hover': {
+                    background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
+                },
+            }}
+            onClick={() => {
+                handleRequest()
+                back()
+            }}
+        >
+            <Typography 
+                fontWeight={550}
+                sx = {{
+                    fontSize:{
+                        xs: 13,
+                        sm: 18
+                    }
+                }}
+            >
+                Back To Dashboard
+            </Typography>
+        </Button>
+    </Box>
+    </>
     );
 }
