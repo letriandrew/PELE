@@ -17,7 +17,7 @@ const teamMembers = [
     name: 'Christian Manibusan',
     role: '',
     image: 'https://media.licdn.com/dms/image/v2/D5603AQHsfqoza5jUHQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1716026398972?e=1732147200&v=beta&t=77oo-Xfr3yVqlBeZidYXH0gds806RF1XMcYzDiZIwxU',
-    description: 'I am an aspiring Software Engineer with a passion to solve real world problems thorugh innovative and scalable solutions. I have completed my Bachelors in Computer Science at California State University San Marcos. Some of my hobbies include: bouldering, skateboading, playing guitar, and playing video games! Always looking to connect and meet new people, feel free to reach out! (Fortunately I am not a fan of the Dallas Cowboys)',
+    description: 'I am an aspiring Software Engineer with a passion to solve real world problems through innovative and scalable solutions. I have completed my Bachelors in Computer Science at California State University San Marcos. Some of my hobbies include: bouldering, skateboading, playing guitar, and playing video games! Always looking to connect and meet new people, feel free to reach out! (Fortunately I am not a fan of the Dallas Cowboys)',
     githubLink: 'https://github.com/kikijee',
     linkedInLink: 'https://www.linkedin.com/in/christian-manibusan-885005259/',
   },
