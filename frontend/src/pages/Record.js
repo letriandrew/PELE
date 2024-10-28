@@ -14,8 +14,6 @@ import PausePlayIndicator from '../components/PausePlayIndicator';
 import { useAudioContext } from '../context/AudioContext';
 import { sendAudio } from '../apiService';
 
-import axios from 'axios';
-
 const Record = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [generate, setGenerate] = useState(false);
@@ -174,12 +172,33 @@ const Record = () => {
     recordedChunksRef.current = [];
   };
 
-  const handlePause = () => {
+  const handlePause = async() => {
     if (mediaRecorderRef.current) {
       if (pause) {
         mediaRecorderRef.current.resume();
-      } else {
-        mediaRecorderRef.current.pause();
+
+        // MAYBE
+        mediaRecorderRef.current.onresume =()=>{
+          if (audioUrl) {
+            URL.revokeObjectURL(audioUrl);
+          }
+          setAudioUrl(null);
+        }
+      } 
+      else {
+        await mediaRecorderRef.current.pause();
+
+        // MAYBE
+        mediaRecorderRef.current.onpause =()=>{
+          const blob = new Blob(recordedChunksRef.current, { type: 'audio/mp3' });
+          //recordedChunksRef.current = [];
+          setAudioBlob(blob); //store the blob and ensure it doesnt get lost for backend transfer
+          if (audioUrl) {
+            URL.revokeObjectURL(audioUrl);
+          }
+          const newAudioUrl = URL.createObjectURL(blob);
+          setAudioUrl(newAudioUrl);
+        }
       }
       setPause(!pause);
     }
