@@ -54,7 +54,20 @@ export default function Home() {
       }}
     >
       <CssBaseline />
-      <Container component="main" sx={{ mt: 35, textAlign: 'center' }} maxWidth="sm">
+      <Container 
+        component="main" 
+        sx={{ 
+          mt: {
+            xl: 35,
+            lg: 25,
+            md: 20,
+            sm: 20,
+            xs: 20
+          }, 
+          textAlign: 'center' 
+        }} 
+        maxWidth="sm"
+      >
         <Typography 
         variant="h3"
         sx={{
