@@ -79,7 +79,7 @@ const Record = () => {
         if (event.data.size > 0) recordedChunksRef.current.push(event.data);
       };
 
-      mediaRecorderRef.current.start();
+      mediaRecorderRef.current.start(1000);
       const dataArray = new Uint8Array(analyzerRef.current.frequencyBinCount);
       const updateVolume = () => {
         analyzerRef.current.getByteFrequencyData(dataArray);
