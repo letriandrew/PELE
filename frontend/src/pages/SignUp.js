@@ -51,7 +51,7 @@ export default function SignUp() {
   const authDispatch = React.useContext(AuthDispatchContext)
   const navigate = useNavigate();
 
-  const [signUpDisabled, setSignUpDisabled] = React.useState(false);
+  const [signUpDisabled, setSignUpDisabled] = React.useState(true);
 
 
   const validateInputs = () => {
