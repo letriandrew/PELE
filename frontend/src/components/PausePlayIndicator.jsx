@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import BlinkingCircle from "./BlinkingCircle"
 
 export default function PausePlayIndicator({isRecording, pause}) {
