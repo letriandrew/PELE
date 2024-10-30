@@ -3,7 +3,7 @@ import { Button,Typography } from "@mui/material"
 
 
 // Used in Record.js
-export default function RecordButton({handleRecordingToggle, isRecording}) {
+export default function RecordButton({handleRecordingToggle, isRecording, pause}) {
     return (
         <Button
             variant="contained"
@@ -20,7 +20,7 @@ export default function RecordButton({handleRecordingToggle, isRecording}) {
                 }
             }}
         >
-            <Typography fontWeight={700} letterSpacing={'0.1rem'}>{isRecording ? 'END' : 'Record'}</Typography>
+            <Typography fontWeight={700} letterSpacing={'0.1rem'}>{isRecording ? (pause ? 'resume' : 'pause') : 'Record'}</Typography>
         </Button>
     )
 }
