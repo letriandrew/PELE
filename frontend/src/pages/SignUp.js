@@ -14,10 +14,11 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { GoogleIcon } from '../components/CustomIcons';
-import { signUpUser, signInUser } from '../apiService';
+import { signUpUser, signInUser, LoginSignUpGoogle } from '../apiService';
 import Notification from '../components/Notification';
 import { useNavigate } from 'react-router-dom';
 import { AuthDispatchContext } from '../context/AuthContext';
+import {useGoogleLogin } from '@react-oauth/google';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -51,7 +52,7 @@ export default function SignUp() {
   const authDispatch = React.useContext(AuthDispatchContext)
   const navigate = useNavigate();
 
-  const [signUpDisabled, setSignUpDisabled] = React.useState(true);
+  const [signUpDisabled, setSignUpDisabled] = React.useState(false);
 
 
   const validateInputs = () => {
@@ -137,13 +138,38 @@ export default function SignUp() {
     setNotification(false)
   }
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: async(codeResponse) => {
+      const response = await LoginSignUpGoogle(codeResponse.access_token)
+      if(response.status === 200){
+        console.log("sign in success!",response.data)
+        sessionStorage.setItem('user',JSON.stringify(response.data))  // save basic user data in session storage for easy access
+        authDispatch({type:'change',payload:response.data})           // setting context provider use state
+        console.log(JSON.parse(sessionStorage.getItem('user')))
+        navigate('/')
+      }
+      else{
+        console.error("error in account creation",response.response)
+        setNotificationStatus(false)
+        setNotification(true)
+        setNotificationMessage(response.response.data.detail)
+      }
+    },
+    onError: (error) => {
+      console.log('Login Failed:', error)
+      setNotificationMessage("Error during google login")
+      setNotificationStatus(false)
+      setNotification(true)
+    }
+  });
+
   return (
     <>
         <CssBaseline />
           <Stack
             sx={{
               justifyContent: 'center',
-              height: signUpDisabled ? '88dvh': '100dvh',
+              height: signUpDisabled ? '88dvh': '',
               p: 2,
               pt: 7,
               mt: {
@@ -250,15 +276,17 @@ export default function SignUp() {
                   </span>
                 </Typography>
               </Box>
-              {/* <Divider>
+              
+              <Divider>
                 <Typography sx={{ color: 'text.secondary' }}>or</Typography>
               </Divider>
+              
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button
                   type="submit"
                   fullWidth
                   variant="outlined"
-                  onClick={() => alert('Sign up with Google')}
+                  onClick={() => googleLogin()}
                   startIcon={<GoogleIcon />}
                   sx={{
                     borderColor: '#FE6B8B', // Change this to your preferred outline color
@@ -270,14 +298,15 @@ export default function SignUp() {
                 >
                   Sign up with Google
                 </Button>
-              </Box> */}
+              </Box>
+
             </Card>
-            
+            </Stack>
 
             { notification &&
             <Notification message = {notificationMessage} status = {notificationStatus} close = {handleCloseNotification}/>
             }
-          </Stack>
+          
           {signUpDisabled && (
           <Box
             sx={{

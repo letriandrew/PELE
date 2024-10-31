@@ -101,7 +101,6 @@ export default function SignIn() {
 
   const googleLogin = useGoogleLogin({
     onSuccess: async(codeResponse) => {
-      console.log(codeResponse.access_token)
       const response = await LoginSignUpGoogle(codeResponse.access_token)
       if(response.status === 200){
         console.log("sign in success!",response.data)
@@ -215,6 +214,7 @@ export default function SignIn() {
               <Divider>
                 <Typography sx={{ color: 'text.secondary' }}>or</Typography>
               </Divider>
+
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button
                   type="submit"
@@ -233,6 +233,7 @@ export default function SignIn() {
                   Sign in with Google
                 </Button>
               </Box>
+              
             </Card>
           </Stack>
           { notification &&
