@@ -65,14 +65,15 @@ class Item(ItemBase):
 
 
 # User schema
-
 class UserBase(BaseModel):
     email: str
 
+class UserGoogleToken(BaseModel):
+    token: str
 
 class UserCreate(UserBase):
     name: str
-    password: str
+    password: Optional[str] = None
 
 
 class User(UserBase):
