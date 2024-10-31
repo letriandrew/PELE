@@ -3,6 +3,8 @@ import { Box, Typography, Grid, Card, CardContent, CardMedia, Avatar, CssBaselin
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { IconButton } from '@mui/material';
+import ComputerIcon from '@mui/icons-material/Computer';
+import Tooltip from '@mui/material/Tooltip';
 
 const teamMembers = [
   {
@@ -12,14 +14,16 @@ const teamMembers = [
     description: 'I am currently working as a Software Engineer at Panasonic Avionics Corporation while studying for my Masters in Data Science at the University of Colorado Boulder. Previously, I completed my Bachelors in Computer Science at California State University San Marcos. In my spare time I love to DJ, hike in nature, and watch sports! (Unfortunately I am a fan of the Dallas Cowboys...) Feel free to reach out on LinkedIn if you would like to connect!',
     githubLink: 'https://github.com/letriandrew',
     linkedInLink: 'https://www.linkedin.com/in/letriandrew/',
+    portfolio: null
   },
   {
     name: 'Christian Manibusan',
     role: '',
-    image: 'https://media.licdn.com/dms/image/v2/D5603AQHsfqoza5jUHQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1716026398972?e=1732147200&v=beta&t=77oo-Xfr3yVqlBeZidYXH0gds806RF1XMcYzDiZIwxU',
+    image: 'https://media.licdn.com/dms/image/v2/D5603AQELrycYglbOLQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1728903407240?e=1735776000&v=beta&t=WsUQ-5pNKxSQVc3_v-u7Pvs0Ktg_oc85a78pzKh8brY',
     description: 'I am an aspiring Software Engineer with a passion to solve real world problems through innovative and scalable solutions. I have completed my Bachelors in Computer Science at California State University San Marcos. Some of my hobbies include: bouldering, skateboading, playing guitar, and playing video games! Always looking to connect and meet new people, feel free to reach out! (Fortunately I am not a fan of the Dallas Cowboys)',
     githubLink: 'https://github.com/kikijee',
     linkedInLink: 'https://www.linkedin.com/in/christian-manibusan-885005259/',
+    portfolio: 'https://christian-manibusan.com/'
   },
 ];
 
@@ -92,8 +96,17 @@ const AboutUs = () => {
                   <Typography variant="body1" color="textSecondary" sx={{ marginTop: '10px' }}>
                     {member.description}
                   </Typography>
-                  <IconButton href={member.githubLink}><GitHubIcon sx={{fontSize:35}}/></IconButton>
-                  <IconButton href={member.linkedInLink}><LinkedInIcon sx={{fontSize:35}}/></IconButton>
+                  <Tooltip title="GitHub">
+                    <IconButton href={member.githubLink}><GitHubIcon sx={{fontSize:35}}/></IconButton>
+                  </Tooltip>
+                  <Tooltip title="LinkedIn">
+                    <IconButton href={member.linkedInLink}><LinkedInIcon sx={{fontSize:35}}/></IconButton>
+                  </Tooltip>
+                  { member.portfolio &&
+                    <Tooltip title="Portfolio">
+                      <IconButton href={member.portfolio}><ComputerIcon sx={{fontSize:35}}/></IconButton>
+                    </Tooltip>
+                  }
                 </CardContent>
               </Card>
             </Grid>
