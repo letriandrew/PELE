@@ -10,3 +10,4 @@ python-multipart
 PyJWT
 bcrypt
 ffmpeg-python
+httpx
