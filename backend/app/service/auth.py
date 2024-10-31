@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
 import jwt
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Response
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
@@ -9,6 +9,7 @@ from ..database import schemas
 from ..database import crud
 from sqlalchemy.orm import Session
 from ..config import settings
+import httpx
 
 # initialize hashing context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -59,3 +60,25 @@ async def get_current_user(db: Session, token: str):
     if user is None:
         raise credentials_exception
     return user
+
+async def fetch_google_user_info(token: str) -> dict:
+    async with httpx.AsyncClient() as client:
+        res = await client.get(
+            f'https://www.googleapis.com/oauth2/v1/userinfo?access_token={token}', 
+            headers={
+                'Authorization': f'Bearer {token}',
+                'Accept': 'application/json'
+            }
+        )
+        res.raise_for_status()
+        return res.json()
+    
+# make sure to change this on launch day 0_0
+def set_access_token_cookie(response: Response, access_token: str):
+    response.set_cookie(
+        key="pele-access-token", 
+        value=access_token,
+        httponly=False,                  
+        secure=False,                   
+        samesite="lax"                 
+    )

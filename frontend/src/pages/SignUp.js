@@ -18,7 +18,7 @@ import { signUpUser, signInUser, LoginSignUpGoogle } from '../apiService';
 import Notification from '../components/Notification';
 import { useNavigate } from 'react-router-dom';
 import { AuthDispatchContext } from '../context/AuthContext';
-import {useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from '@react-oauth/google';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -92,7 +92,7 @@ export default function SignUp() {
     return isValid;
   };
 
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(event.currentTarget);
@@ -101,8 +101,8 @@ export default function SignUp() {
       email: data.get('email'),
       password: data.get('password'),
     });
-    if (response.status === 200){
-      console.log("account creation success!",response.data)
+    if (response.status === 200) {
+      console.log("account creation success!", response.data)
       form.reset();
       // setNotificationStatus(true)
       // setNotification(true)
@@ -113,43 +113,43 @@ export default function SignUp() {
         email: data.get('email'),
         password: data.get('password'),
       });
-      
-      if (res.status === 200){
-        console.log("sign in success!",res.data)
-        sessionStorage.setItem('user',JSON.stringify(res.data))  // save basic user data in session storage for easy access
-        authDispatch({type:'change',payload:res.data})           // setting context provider use state
+
+      if (res.status === 200) {
+        console.log("sign in success!", res.data)
+        sessionStorage.setItem('user', JSON.stringify(res.data))  // save basic user data in session storage for easy access
+        authDispatch({ type: 'change', payload: res.data })           // setting context provider use state
         navigate('/')
       }
-      else{
-        console.error("error during sign in",res)
+      else {
+        console.error("error during sign in", res)
       }
 
 
     }
-    else{
-      console.error("error in account creation",response.response)
+    else {
+      console.error("error in account creation", response.response)
       setNotificationStatus(false)
       setNotification(true)
       setNotificationMessage(response.response.data.detail)
     }
   };
 
-  const handleCloseNotification =()=>{
+  const handleCloseNotification = () => {
     setNotification(false)
   }
 
   const googleLogin = useGoogleLogin({
-    onSuccess: async(codeResponse) => {
+    onSuccess: async (codeResponse) => {
       const response = await LoginSignUpGoogle(codeResponse.access_token)
-      if(response.status === 200){
-        console.log("sign in success!",response.data)
-        sessionStorage.setItem('user',JSON.stringify(response.data))  // save basic user data in session storage for easy access
-        authDispatch({type:'change',payload:response.data})           // setting context provider use state
+      if (response.status === 200) {
+        console.log("sign in success!", response.data)
+        sessionStorage.setItem('user', JSON.stringify(response.data))  // save basic user data in session storage for easy access
+        authDispatch({ type: 'change', payload: response.data })           // setting context provider use state
         console.log(JSON.parse(sessionStorage.getItem('user')))
         navigate('/')
       }
-      else{
-        console.error("error in account creation",response.response)
+      else {
+        console.error("error in account creation", response.response)
         setNotificationStatus(false)
         setNotification(true)
         setNotificationMessage(response.response.data.detail)
@@ -165,149 +165,30 @@ export default function SignUp() {
 
   return (
     <>
-        <CssBaseline />
-          <Stack
-            sx={{
-              justifyContent: 'center',
-              height: signUpDisabled ? '88dvh': '',
-              p: 2,
-              pt: 7,
-              mt: {
-                xl:4,
-                lg:10,
-                md:10,
-                sm:10,
-                xs:10
-              }
-            }}
+      <CssBaseline />
+      <Stack
+        sx={{
+          justifyContent: 'center',
+          p: 2,
+          pt: 7,
+          mt: {
+            xl: 15,
+            lg: 10,
+            md: 10,
+            sm: 10,
+            xs: 10
+          }
+        }}
+      >
+        <Card variant="outlined">
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
           >
-            <Card variant="outlined">
-              <Typography
-                component="h1"
-                variant="h4"
-                sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
-              >
-                Sign up
-              </Typography>
-              <Box
-                component="form"
-                onSubmit={handleSubmit}
-                sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-              >
-                <FormControl>
-                  <FormLabel htmlFor="name">Full name</FormLabel>
-                  <TextField
-                    disabled = {signUpDisabled}
-                    autoComplete="name"
-                    name="name"
-                    required
-                    fullWidth
-                    id="name"
-                    placeholder="Jon Snow"
-                    error={nameError}
-                    helperText={nameErrorMessage}
-                    color={nameError ? 'error' : 'primary'}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="email">Email</FormLabel>
-                  <TextField
-                    disabled = {signUpDisabled}
-                    required
-                    fullWidth
-                    id="email"
-                    placeholder="your@email.com"
-                    name="email"
-                    autoComplete="email"
-                    variant="outlined"
-                    error={emailError}
-                    helperText={emailErrorMessage}
-                    color={passwordError ? 'error' : 'primary'}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel htmlFor="password">Password</FormLabel>
-                  <TextField
-                    disabled = {signUpDisabled}
-                    required
-                    fullWidth
-                    name="password"
-                    placeholder="••••••"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                    variant="outlined"
-                    error={passwordError}
-                    helperText={passwordErrorMessage}
-                    color={passwordError ? 'error' : 'primary'}
-                  />
-                </FormControl>
-                {/* <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="primary" />}
-                  label="I want to receive updates via email."
-                /> */}
-                <Button
-                  disabled = {signUpDisabled}
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  onClick={validateInputs}
-                  sx={{
-                    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-                    color: 'white',
-                    '&:hover': {
-                      background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
-                    },
-                    mt:2
-                  }}
-                >
-                  Sign up
-                </Button>
-                <Typography sx={{ textAlign: 'center' }}>
-                  Already have an account?{' '}
-                  <span>
-                    <Link
-                      href="/signIn"
-                      variant="body2"
-                      sx={{ alignSelf: 'center' }}
-                    >
-                      Sign in
-                    </Link>
-                  </span>
-                </Typography>
-              </Box>
-              
-              <Divider>
-                <Typography sx={{ color: 'text.secondary' }}>or</Typography>
-              </Divider>
-              
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => googleLogin()}
-                  startIcon={<GoogleIcon />}
-                  sx={{
-                    borderColor: '#FE6B8B', // Change this to your preferred outline color
-                    color: 'white',       // Optional: Match text color with the outline color
-                    '&:hover': {
-                      borderColor: '#FE6B8B',  // Change this for the hover state
-                    },
-                  }}
-                >
-                  Sign up with Google
-                </Button>
-              </Box>
-
-            </Card>
-            </Stack>
-
-            { notification &&
-            <Notification message = {notificationMessage} status = {notificationStatus} close = {handleCloseNotification}/>
-            }
-          
-          {signUpDisabled && (
+            Sign up
+          </Typography>
+          {signUpDisabled &&
           <Box
             sx={{
               backgroundColor: '#ffeb3b',
@@ -324,7 +205,125 @@ export default function SignUp() {
             <br />
             <strong>- PELE team</strong>
           </Box>
-        )}
-        </>
+          }
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+          >
+            <FormControl>
+              <FormLabel htmlFor="name">Full name</FormLabel>
+              <TextField
+                disabled={signUpDisabled}
+                autoComplete="name"
+                name="name"
+                required
+                fullWidth
+                id="name"
+                placeholder="Jon Snow"
+                error={nameError}
+                helperText={nameErrorMessage}
+                color={nameError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <TextField
+                disabled={signUpDisabled}
+                required
+                fullWidth
+                id="email"
+                placeholder="your@email.com"
+                name="email"
+                autoComplete="email"
+                variant="outlined"
+                error={emailError}
+                helperText={emailErrorMessage}
+                color={passwordError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="password">Password</FormLabel>
+              <TextField
+                disabled={signUpDisabled}
+                required
+                fullWidth
+                name="password"
+                placeholder="••••••"
+                type="password"
+                id="password"
+                autoComplete="new-password"
+                variant="outlined"
+                error={passwordError}
+                helperText={passwordErrorMessage}
+                color={passwordError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            {/* <FormControlLabel
+                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  label="I want to receive updates via email."
+                /> */}
+            <Button
+              disabled={signUpDisabled}
+              type="submit"
+              fullWidth
+              variant="contained"
+              onClick={validateInputs}
+              sx={{
+                background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+                color: 'white',
+                '&:hover': {
+                  background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
+                },
+                mt: 2
+              }}
+            >
+              Sign up
+            </Button>
+            <Typography sx={{ textAlign: 'center' }}>
+              Already have an account?{' '}
+              <span>
+                <Link
+                  href="/signIn"
+                  variant="body2"
+                  sx={{ alignSelf: 'center' }}
+                >
+                  Sign in
+                </Link>
+              </span>
+            </Typography>
+          </Box>
+
+          <Divider>
+            <Typography sx={{ color: 'text.secondary' }}>or</Typography>
+          </Divider>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Button
+              disabled={signUpDisabled}
+              type="submit"
+              fullWidth
+              variant="outlined"
+              onClick={() => googleLogin()}
+              startIcon={<GoogleIcon />}
+              sx={{
+                borderColor: '#FE6B8B', // Change this to your preferred outline color
+                color: 'white',       // Optional: Match text color with the outline color
+                '&:hover': {
+                  borderColor: '#FE6B8B',  // Change this for the hover state
+                },
+              }}
+            >
+              Sign up with Google
+            </Button>
+          </Box>
+
+        </Card>
+      </Stack>
+
+      {notification &&
+        <Notification message={notificationMessage} status={notificationStatus} close={handleCloseNotification} />
+      }
+    </>
   );
 }

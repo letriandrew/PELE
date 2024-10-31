@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { AuthDispatchContext } from '../context/AuthContext';
 import Notification from '../components/Notification';
 import {useGoogleLogin } from '@react-oauth/google';
+import SignUp from './SignUp';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -48,6 +49,8 @@ export default function SignIn() {
   const [notificationMessage, setNotificationMessage] = React.useState("");
   const authDispatch = React.useContext(AuthDispatchContext)
   const navigate = useNavigate();
+
+  const [signUpDisabled, setSignUpDisabled] = React.useState(false);
 
 
   const validateInputs = () => {
@@ -217,6 +220,7 @@ export default function SignIn() {
 
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <Button
+                  disabled={signUpDisabled}
                   type="submit"
                   fullWidth
                   variant="outlined"
