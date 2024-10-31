@@ -1,24 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Typography, Box } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import Questions from '../components/Questions';
-import PauseIcon from '@mui/icons-material/Pause';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import BlinkingCircle from '../components/BlinkingCircle';
 import GenerateButton from '../components/GenerateButton';
 import DeleteButton from '../components/DeleteButton';
 import VolumeIndicator from '../components/VolumeIndicator';
 import RecordButton from '../components/RecordButton';
-import PausePlayButton from '../components/PausePlayButton';
 import PausePlayIndicator from '../components/PausePlayIndicator';
 import { useAudioContext } from '../context/AudioContext';
 import { sendAudio } from '../apiService';
 
-import axios from 'axios';
-
 const Record = () => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [generate, setGenerate] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);  // for initial recording button press
+  const [generate, setGenerate] = useState(false);  
   const [seconds, setSeconds] = useState(0);
   const [volume, setVolume] = useState(0);
   const [audioUrl, setAudioUrl] = useState(null);
@@ -41,7 +35,7 @@ const Record = () => {
   useEffect(() => {
     let timer;
     if (isRecording && !pause) {
-      audioUrl && setSeconds(0);
+      //audioUrl && setSeconds(0);
       timer = setInterval(() => {
         setSeconds((prev) => prev + 1);
       }, 1000);
@@ -54,6 +48,7 @@ const Record = () => {
   // functionality for starting/stopping audio capture
   useEffect(() => {
     if (isRecording) {
+      setProcessedAudioResponse(null)
       startAudioCapture();
     } else {
       stopAudioCapture();
@@ -124,12 +119,17 @@ const Record = () => {
   };
 
   const handleRecordingToggle = () => {
+    // initial recording button press
     if (!isRecording) {
       setSeconds(0);
       setAudioUrl(null);
       setPause(false)
+      setIsRecording(!isRecording);
     }
-    setIsRecording(!isRecording);
+    // everything else
+    else{
+      handlePause()
+    }
   };
 
   const handlePage = (num) => {
@@ -162,24 +162,67 @@ const Record = () => {
       console.error("No audio blob available.");
     }
 
+    handleDelete()
+
   };
 
-  const handleDelete = () => {
+  const handleDelete = async() => {
     setIsRecording(false);
     setSeconds(0);
-    setAudioUrl(null);
     setAudioBlob(null)
     setPause(false);
-    setProcessedAudioResponse(null)
-    recordedChunksRef.current = [];
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+    }
+    setAudioUrl(null);
+    //setProcessedAudioResponse(null)
+
+    if (microphoneRef.current) {
+      await microphoneRef.current.disconnect();
+      microphoneRef.current = null;
+    }
+    if (audioContextRef.current) {
+      await audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+    setVolume(0);
+
+    if (mediaRecorderRef.current) {
+      await mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.onstop = async () => {
+        recordedChunksRef.current = [];
+        mediaRecorderRef.current = null;
+      };
+    }
   };
 
-  const handlePause = () => {
+  const handlePause = async() => {
     if (mediaRecorderRef.current) {
       if (pause) {
         mediaRecorderRef.current.resume();
-      } else {
-        mediaRecorderRef.current.pause();
+
+        mediaRecorderRef.current.onresume =()=>{
+          if (audioUrl) {
+            URL.revokeObjectURL(audioUrl);
+          }
+          setAudioUrl(null);
+        }
+      } 
+      else {
+        await mediaRecorderRef.current.pause();
+
+        mediaRecorderRef.current.onpause =()=>{
+          const blob = new Blob(recordedChunksRef.current, { type: 'audio/mp3' });
+          setAudioBlob(blob); //store the blob and ensure it doesnt get lost for backend transfer
+          if (audioUrl) {
+            URL.revokeObjectURL(audioUrl);
+          }
+          const newAudioUrl = URL.createObjectURL(blob);
+          setAudioUrl(newAudioUrl);
+        }
       }
       setPause(!pause);
     }
@@ -216,18 +259,8 @@ const Record = () => {
             transform: 'translateX(-50%)'
           }}
           >
-            <RecordButton handleRecordingToggle={handleRecordingToggle} isRecording={isRecording} />
+            <RecordButton handleRecordingToggle={handleRecordingToggle} isRecording={isRecording} pause={pause}/>
 
-            <Box sx={{
-              position: 'absolute',
-              right: 'calc(50% + 90px)',
-              top: '50%',
-              transform: 'translateY(-50%)'
-            }}>
-              <PausePlayButton handlePause={handlePause} isRecording={isRecording} pause={pause} />
-            </Box>
-
-            {/* Container for pause/play indicator */}
             <Box sx={{
               display: 'flex',
               alignItems: 'center',
