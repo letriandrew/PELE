@@ -14,10 +14,11 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { GoogleIcon } from '../components/CustomIcons';
-import { signInUser } from '../apiService';
+import { signInUser, LoginSignUpGoogle } from '../apiService';
 import { useNavigate } from 'react-router-dom';
 import { AuthDispatchContext } from '../context/AuthContext';
 import Notification from '../components/Notification';
+import {useGoogleLogin } from '@react-oauth/google';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -98,6 +99,32 @@ export default function SignIn() {
     }
   };
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: async(codeResponse) => {
+      console.log(codeResponse.access_token)
+      const response = await LoginSignUpGoogle(codeResponse.access_token)
+      if(response.status === 200){
+        console.log("sign in success!",response.data)
+        sessionStorage.setItem('user',JSON.stringify(response.data))  // save basic user data in session storage for easy access
+        authDispatch({type:'change',payload:response.data})           // setting context provider use state
+        console.log(JSON.parse(sessionStorage.getItem('user')))
+        navigate('/')
+      }
+      else{
+        console.error("error during sign in",response)
+        setNotificationMessage(response.response.data.detail)
+        setNotificationStatus(false)
+        handleOpenNotification()
+      }
+    },
+    onError: (error) => {
+      console.log('Login Failed:', error)
+      setNotificationMessage("Error during google login")
+      setNotificationStatus(false)
+      handleOpenNotification()
+    }
+  });
+
   return (
     <>
         <CssBaseline />
@@ -106,7 +133,13 @@ export default function SignIn() {
               justifyContent: 'center',
               height: '100dvh',
               p: 2,
-              mt: 4
+              mt: {
+                xl:4,
+                lg:10,
+                md:10,
+                sm:10,
+                xs:10
+              }
             }}
           >
             <Card variant="outlined">
@@ -179,7 +212,7 @@ export default function SignIn() {
                   </span>
                 </Typography>
               </Box>
-              {/* <Divider>
+              <Divider>
                 <Typography sx={{ color: 'text.secondary' }}>or</Typography>
               </Divider>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -187,7 +220,7 @@ export default function SignIn() {
                   type="submit"
                   fullWidth
                   variant="outlined"
-                  onClick={() => alert('Sign up with Google')}
+                  onClick={() => googleLogin()}
                   startIcon={<GoogleIcon />}
                   sx={{
                     borderColor: '#FE6B8B', // Change this to your preferred outline color
@@ -199,7 +232,7 @@ export default function SignIn() {
                 >
                   Sign in with Google
                 </Button>
-              </Box> */}
+              </Box>
             </Card>
           </Stack>
           { notification &&

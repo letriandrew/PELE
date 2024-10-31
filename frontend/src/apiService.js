@@ -144,5 +144,17 @@ async function changeTitle(id, title) {
     }
 }
 
+async function LoginSignUpGoogle(token){
+    try{
+       const response = await apiService.post(`/auth/login-signup-google`, {
+            token: token
+        });
+        return response
+    }
+    catch(error){
+        console.log("Error logging in / signing up with google",error);
+        return error
+    }
+}
 
-export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete, saveStudySet, sendAudio, deleteStudySet, changeTitle}
+export {signUpUser, signInUser, signOutUser, verifyToken, getStudySets, handleQuestionComplete, saveStudySet, sendAudio, deleteStudySet, changeTitle, LoginSignUpGoogle}

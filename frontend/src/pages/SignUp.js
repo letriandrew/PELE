@@ -146,7 +146,13 @@ export default function SignUp() {
               height: signUpDisabled ? '88dvh': '100dvh',
               p: 2,
               pt: 7,
-              mt: 4
+              mt: {
+                xl:4,
+                lg:10,
+                md:10,
+                sm:10,
+                xs:10
+              }
             }}
           >
             <Card variant="outlined">
