@@ -99,10 +99,10 @@ async function saveStudySet(new_title, new_transcript, new_questions) {
     }
 }
 
-async function sendAudio(formData) {
+async function sendAudio(formData, num_questions = 5) {
     try {
         // Send POST request to FastAPI backend
-        const response = await axios.post(API_URL+'/gen/process-audio', formData, {
+        const response = await axios.post(API_URL+`/gen/process-audio/${num_questions}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

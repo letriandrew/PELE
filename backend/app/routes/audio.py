@@ -6,8 +6,8 @@ import io
 
 router = APIRouter()
 
-@router.post("/process-audio")
-async def process_audio(audio: UploadFile = File(...)):
+@router.post("/process-audio/{num_questions}")
+async def process_audio(num_questions: int, audio: UploadFile = File(...)):
     try:
         # Read the content of the uploaded file as raw byte string
         audio_content = await audio.read()  
@@ -20,7 +20,7 @@ async def process_audio(audio: UploadFile = File(...)):
         transcript = create_transcript(buffer) 
 
         # Produce questions based off the recording text and store to return in a list
-        questions_list = string_to_list(produce_questions(transcript))  
+        questions_list = string_to_list(produce_questions(transcript,num_questions))  
 
         return {
             "transcript": transcript,
